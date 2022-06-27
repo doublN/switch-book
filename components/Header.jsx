@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 const Header = () => {
-  return <Text>Hello! Did it work?</Text>;
+  return <Text>Switch Book</Text>;
 };
 
 export default Header;
