@@ -1,14 +1,22 @@
 import * as Sharing from "expo-sharing";
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+// import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import { StyleSheet, View, Button, Text } from "react-native";
 import BookList from "./components/BookList";
 import Header from "./components/Header";
+import Profile from "./components/Profile";
+import HomePage from "./components/HomePage";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getFirestore } from "firebase/firestore";
+
+//Navigation
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigation } from "react-navigation/bottom-tabs";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
@@ -23,16 +31,27 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
+//Navigation
+const Tab = createNativeStackNavigator();
+
 export default function App() {
   const [user] = useAuthState(auth);
 
   return (
-    <View style={styles.container}>
-      <Header />
-      <BookList />
-      <StatusBar style="auto" />
-      {user ? <LogoutButton /> : <LoginButton />}
-    </View>
+    <>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomePage} />
+          <Tab.Screen name="Profile" component={Profile} />
+        </Tab.Navigator>
+      </NavigationContainer>
+      <View style={styles.container}>
+        {/* <StatusBar style="auto" /> */}
+        {user ? <LogoutButton /> : <LoginButton />}
+        <Header />
+        <BookList />
+      </View>
+    </>
   );
 }
 
