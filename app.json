@@ -2,6 +2,7 @@
   "expo": {
     "name": "switch-book",
     "slug": "switch-book",
+    "owner": "mmysore",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,13 +19,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mmysore.switchbook"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.mmysore.switchbook"
     },
     "web": {
       "favicon": "./assets/favicon.png"
