@@ -1,10 +1,15 @@
+import * as Sharing from "expo-sharing";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import BookList from "./components/BookList";
+import Header from "./components/Header";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello!</Text>
+      <Header />
+      <BookList />
       <StatusBar style="auto" />
     </View>
   );
