@@ -1,16 +1,8 @@
-import * as Sharing from "expo-sharing";
-
-import { StatusBar } from "expo-status-bar";
-import { createContext } from "react";
-
-import { useState } from "react";
-import { StyleSheet, View, Button, Text } from "react-native";
-import BookList from "./components/BookList";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
 import HomePage from "./components/HomePage";
-import LogInPage from "./components/LogInPage";
-import AddABook from './components/AddABook';
+import LoginPage from "./components/LoginPage";
+import AddABook from "./components/AddABook";
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -24,12 +16,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
-    authDomain: "switchbook-225b3.firebaseapp.com",
-    projectId: "switchbook-225b3",
-    storageBucket: "switchbook-225b3.appspot.com",
-    messagingSenderId: "731886943527",
-    appId: "1:731886943527:web:af3ffaf1fd4932b30cfd02",
+  apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
+  authDomain: "switchbook-225b3.firebaseapp.com",
+  projectId: "switchbook-225b3",
+  storageBucket: "switchbook-225b3.appspot.com",
+  messagingSenderId: "731886943527",
+  appId: "1:731886943527:web:af3ffaf1fd4932b30cfd02",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -42,35 +34,26 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    const [user] = useAuthState(auth);
-    const UserContext = createContext();
-  return (
-    <>
-      <Header />
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="AddABook" component={AddABook} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <NavigationContainer>
-        <Tab.Navigator initialRouteName="LogIn">
-          <Tab.Screen name="Home" component={HomePage} />
-          <Tab.Screen name="Profile" component={Profile} />
-          <Tab.Screen name="LogIn" component={LogInPage}/>
-        </Tab.Navigator>
-      </NavigationContainer>
-      <View style={styles.container}>
-        {/* <StatusBar style="auto" /> */}
-        {user ? <LogoutButton /> : <LoginButton />}
-      </View>
-    </>
-  );
-}
+  const [user] = useAuthState(auth);
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
+  if (user === null) {
+    return <LoginPage auth={auth} />;
+  } else {
+    return (
+      <>
+        <Header />
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="AddABook" component={AddABook} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <NavigationContainer>
+          <Tab.Navigator initialRouteName="Home">
+            <Tab.Screen name="Home" component={HomePage} />
+            <Tab.Screen name="Profile" component={Profile} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </>
+    );
+  }
+}
