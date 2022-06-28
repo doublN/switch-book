@@ -1,3 +1,4 @@
+
 import { Button } from "react-native";
 
 export const LogoutButton = ({ auth }) => {
