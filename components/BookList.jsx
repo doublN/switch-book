@@ -15,7 +15,6 @@ const BookList = () => {
   ]);
 
   return (
-    <View>
       <FlatList 
         data={books}
         renderItem={({item}) => <ScrollView>
@@ -26,7 +25,6 @@ const BookList = () => {
           <Text>Owner: {item.username}</Text>
           <Text>Added on {item.dateAdded}</Text>
         </ScrollView>} />
-    </View>
   );
 };
 

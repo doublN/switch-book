@@ -1,14 +1,19 @@
 import * as Sharing from "expo-sharing";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, Button, Text } from "react-native";
 import BookList from "./components/BookList";
 import Header from "./components/Header";
 
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getFirestore } from "firebase/firestore";
+import * as Google from "expo-auth-session/providers/google";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
@@ -31,14 +36,20 @@ export default function App() {
       <Header />
       <BookList />
       <StatusBar style="auto" />
-      {user ? <LogoutButton /> : <LoginButton />}
+      {user ? (
+        <>
+          <Text>User ID: {user.uid}</Text>
+          <LogoutButton />
+        </>
+      ) : (
+        <LoginButton />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -46,32 +57,40 @@ const styles = StyleSheet.create({
 });
 
 const LoginButton = () => {
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
-  };
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId:
+      "731886943527-l30aa53031cmd9t0lmka3or9q9tv3kqg.apps.googleusercontent.com",
+    useProxy: true,
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
+    }
+  }, [response]);
 
   return (
-    <View>
-      <Button
-        onPress={signInWithGoogle}
-        title="Continue with Google"
-        color="#841584"
-        accessibilityLabel="Login/signup with your Google account"
-      />
-    </View>
+    <Button
+      disabled={!request}
+      title="Continue with Google"
+      color="#841584"
+      onPress={() => {
+        promptAsync();
+      }}
+      accessibilityLabel="Login/signup with your Google account"
+    />
   );
 };
 
 const LogoutButton = () => {
   return (
-    <View>
-      <Button
-        onPress={() => auth.signOut()}
-        title="Logout"
-        color="grey"
-        accessibilityLabel="Logout of your account"
-      />
-    </View>
+    <Button
+      onPress={() => auth.signOut()}
+      title="Logout"
+      color="grey"
+      accessibilityLabel="Logout of your account"
+    />
   );
 };
