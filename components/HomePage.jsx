@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button, View, Text } from "react-native";
-import { NativationContainer } from '"react-navigation/native';
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import BookList from "./BookList"
 
 const HomePage = ({ navigation }) => {
   return (
@@ -11,6 +10,7 @@ const HomePage = ({ navigation }) => {
         title="Go to Profile"
         onPress={() => navigation.navigate("Profile")}
       ></Button>
+      <BookList />
     </View>
   );
 };

@@ -16,7 +16,7 @@ import { getFirestore } from "firebase/firestore";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigation } from "react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
@@ -32,13 +32,45 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 
 //Navigation
-const Tab = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [user] = useAuthState(auth);
 
+  const LoginButton = () => {
+    const signInWithGoogle = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider);
+    };
+  
+    return (
+      <View>
+        <Button
+          onPress={signInWithGoogle}
+          title="Continue with Google"
+          color="#841584"
+          accessibilityLabel="Login/signup with your Google account"
+        />
+      </View>
+    );
+  };
+  
+  const LogoutButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => auth.signOut()}
+          title="Logout"
+          color="grey"
+          accessibilityLabel="Logout of your account"
+        />
+      </View>
+    );
+  };
+  
   return (
     <>
+        <Header />
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Home" component={HomePage} />
@@ -48,8 +80,6 @@ export default function App() {
       <View style={styles.container}>
         {/* <StatusBar style="auto" /> */}
         {user ? <LogoutButton /> : <LoginButton />}
-        <Header />
-        <BookList />
       </View>
     </>
   );
@@ -64,33 +94,3 @@ const styles = StyleSheet.create({
   },
 });
 
-const LoginButton = () => {
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
-  };
-
-  return (
-    <View>
-      <Button
-        onPress={signInWithGoogle}
-        title="Continue with Google"
-        color="#841584"
-        accessibilityLabel="Login/signup with your Google account"
-      />
-    </View>
-  );
-};
-
-const LogoutButton = () => {
-  return (
-    <View>
-      <Button
-        onPress={() => auth.signOut()}
-        title="Logout"
-        color="grey"
-        accessibilityLabel="Logout of your account"
-      />
-    </View>
-  );
-};
