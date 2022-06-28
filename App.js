@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Profile from "./components/Profile";
 import HomePage from "./components/HomePage";
 import LogInPage from "./components/LogInPage";
+import AddABook from './components/AddABook';
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -31,10 +32,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const firestore = getFireistore(app);
+const firestore = getFirestore(app);
 
 //Navigation
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user] = useAuthState(auth);
@@ -72,10 +74,15 @@ export default function App() {
   <HomePage auth={auth} />
   return (
     <>
-        <Header />
+      <Header />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="AddABook" component={AddABook} />
+        </Stack.Navigator>
+      </NavigationContainer>
       <NavigationContainer>
         <Tab.Navigator initialRouteName="LogIn">
-          <Tab.Screen name="Home" component={HomePage}/>
+          <Tab.Screen name="Home" component={HomePage} />
           <Tab.Screen name="Profile" component={Profile} />
           <Tab.Screen name="LogIn" component={LogInPage}/>
         </Tab.Navigator>
