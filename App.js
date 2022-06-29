@@ -1,16 +1,15 @@
 import * as Sharing from "expo-sharing";
 
 import { StatusBar } from "expo-status-bar";
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
-import { useState } from "react";
 import { StyleSheet, View, Button, Text } from "react-native";
 import BookList from "./components/BookList";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
 import HomePage from "./components/HomePage";
-import LogInPage from "./components/LogInPage";
-import AddABook from './components/AddABook';
+import LogInPageScreen from "./components/LogInPageScreen";
+import AddABook from "./components/AddABook";
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -22,6 +21,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import CreateProfileScreen from "./components/CreateProfileScreen";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
@@ -44,33 +44,18 @@ const Stack = createNativeStackNavigator();
 export default function App() {
     const [user] = useAuthState(auth);
     const UserContext = createContext();
-  return (
-    <>
-      <Header />
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="AddABook" component={AddABook} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <NavigationContainer>
-        <Tab.Navigator initialRouteName="LogIn">
-          <Tab.Screen name="Home" component={HomePage} />
-          <Tab.Screen name="Profile" component={Profile} />
-          <Tab.Screen name="LogIn" component={LogInPage}/>
-        </Tab.Navigator>
-      </NavigationContainer>
-      <View style={styles.container}>
-        {/* <StatusBar style="auto" /> */}
-        {user ? <LogoutButton /> : <LoginButton />}
-      </View>
-    </>
-  );
+    return (
+        <>
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen name="LogIn" component={LogInPageScreen} />
+                    <Stack.Screen name="InnerNavigation" component={HomePage} />
+                    <Stack.Screen
+                        name="CreateProfile"
+                        component={CreateProfileScreen}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </>
+    );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
