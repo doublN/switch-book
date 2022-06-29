@@ -1,11 +1,11 @@
 import { Button, View, Text } from "react-native";
 import BookList from "./BookList"
 import { useContext } from "react";
-import UserContext from "../Contexts/UserContext";
+import FirebaseContext from ".FirebaseContext./Contexts/FirebaseContext";
 
 const HomePage = ({ navigation }) => {
 
-  const user = useContext(UserContext);
+  const {user} = useContext(FirebaseContext);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
