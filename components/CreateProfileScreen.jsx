@@ -6,7 +6,8 @@ import {
     StyleSheet,
     Button,
     TouchableHighlight,
-} from "react-native-web";
+    Image,
+} from "react-native";
 import { useState } from "react";
 
 export default function CreateProfileScreen() {
@@ -33,16 +34,18 @@ export default function CreateProfileScreen() {
         setSelectedImage({ localUri: pickerResult.uri });
     };
 
+    if (selectedImage !== null) {
+        return (
+            <View>
+                <Image source={{ uri: selectedImage.localUri }} />
+            </View>
+        );
+    }
+
     return (
         <>
             <View>
-                {selectedImage ? (
-                    <Image source={{ uri: selectedImage.localUri }} />
-                ) : null}
-                <TouchableHighlight
-                    title="Select Image"
-                    onPress={openImagePickerAsync}
-                />
+                <Button title="Add photo" onPress={openImagePickerAsync} />
                 <TextInput
                     style={styles.input}
                     placeholder="Enter your Username"
