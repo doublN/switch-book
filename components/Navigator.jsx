@@ -13,13 +13,13 @@ import * as Sharing from "expo-sharing";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-export default function Navigator() {
-  return (
-    <>
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="BookList" component={BookList} />
-        <Tab.Screen name="Profile" component={Profile} />
-      </Tab.Navigator>
-    </>
-  );
+export default function Navigator({ route }) {
+    return (
+        <>
+            <Tab.Navigator screenOptions={{ headerShown: false }}>
+                <Tab.Screen name="BookList" component={BookList} />
+                <Tab.Screen name="Profile" component={Profile} />
+            </Tab.Navigator>
+        </>
+    );
 }

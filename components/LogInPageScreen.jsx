@@ -4,16 +4,18 @@ import Navigator from "./Navigator";
 import { useState } from "react";
 
 export default function LogInPageScreen({ app, auth, navigation }) {
-  const [user, setUser] = useState(false);
+    const [user, setUser] = useState(true);
 
-  return (
-    <>
-      <Button
-        title="Create Profile"
-        onPress={() =>
-          navigation.navigate(`${user ? "Navigation" : "CreateProfile"}`)
-        }
-      ></Button>
-    </>
-  );
+    return (
+        <>
+            <Button
+                title="Create Profile"
+                onPress={() =>
+                    navigation.navigate(
+                        `${user ? "Navigation" : "CreateProfile"}`
+                    )
+                }
+            ></Button>
+        </>
+    );
 }
