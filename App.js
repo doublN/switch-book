@@ -3,10 +3,12 @@ import Profile from "./components/Profile";
 import HomePage from "./components/HomePage";
 import LoginPage from "./components/LoginPage";
 import AddABook from "./components/AddABook";
-import FirebaseContext from "./Contexts/FirebaseContext";
+import UserContext from "./Contexts/UserContext";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import {auth, firestore} from "./Utils/firebase"
+import { auth, firestore } from "./Utils/firebase";
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "./Utils/dbQueries";
 
 //Navigation
 import * as React from "react";
@@ -19,13 +21,23 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [user] = useAuthState(auth);
+  const [authorisedUser] = useAuthState(auth);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  if (user === null) {
+  useEffect(() => {
+    // set currentUser (available to all components via context)
+    if (authorisedUser) {
+      getCurrentUser(authorisedUser).then((currentUser) => {
+        setCurrentUser(currentUser);
+      });
+    }
+  }, [authorisedUser]);
+
+  if (authorisedUser === null) {
     return <LoginPage auth={auth} />;
   } else {
     return (
-      <FirebaseContext.Provider value = {{user, firestore}}>
+      <UserContext.Provider value={{ currentUser }}>
         <Header />
         <NavigationContainer>
           <Stack.Navigator>
@@ -38,7 +50,7 @@ export default function App() {
             <Tab.Screen name="Profile" component={Profile} />
           </Tab.Navigator>
         </NavigationContainer>
-      </FirebaseContext.Provider>
+      </UserContext.Provider>
     );
   }
 }
