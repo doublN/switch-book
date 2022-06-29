@@ -1,13 +1,19 @@
 import { StyleSheet, View, Button, Text } from "react-native";
 import { NavigationEvents } from "react-navigation";
+import Navigator from "./Navigator";
+import { useState } from "react";
 
 export default function LogInPageScreen({ app, auth, navigation }) {
-    return (
-        <Button
-            title="GO to profile"
-            onPress={() =>
-                navigation.navigate("CreateProfile", { name: "Tom" })
-            }
-        ></Button>
-    );
+  const [user, setUser] = useState(false);
+
+  return (
+    <>
+      <Button
+        title="Create Profile"
+        onPress={() =>
+          navigation.navigate(`${user ? "Navigation" : "CreateProfile"}`)
+        }
+      ></Button>
+    </>
+  );
 }

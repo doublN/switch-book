@@ -13,7 +13,6 @@ import { useState } from "react";
 export default function CreateProfileScreen() {
   const [username, onChangeUsername] = useState("");
   const [location, onChangeLocation] = useState("");
-
   const [selectedImage, setSelectedImage] = useState(null);
 
   let openImagePickerAsync = async () => {
