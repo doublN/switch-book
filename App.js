@@ -6,7 +6,7 @@ import AddABook from "./components/AddABook";
 import UserContext from "./Contexts/UserContext";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firestore } from "./Utils/firebase";
+import { auth } from "./Utils/firebase";
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "./Utils/dbQueries";
 
@@ -21,6 +21,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // authorisedUser = user in authentication database
+  // currentUser = user in our firestore database
   const [authorisedUser] = useAuthState(auth);
   const [currentUser, setCurrentUser] = useState(null);
 

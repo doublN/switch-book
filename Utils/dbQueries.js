@@ -26,7 +26,7 @@ export const getCurrentUser = async (authorisedUser) => {
 export const createUser = async (authorisedUser) => {
   try {
     await setDoc(doc(firestore, "users", authorisedUser.uid), {
-      // insert data for database here
+      // insert data for database here (needs to include 'uid: authorisedUser.uid')
     });
   } catch (err) {
     console.log(err);
