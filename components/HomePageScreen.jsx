@@ -1,18 +1,18 @@
 import * as React from "react";
 import { Button, View, Text } from "react-native";
-import BookList from "./BookList"
+import BookList from "./BookList";
 
-const HomePage = ({ navigation }) => {
+const HomePageScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Home Screen</Text>
       <Button
-        title="Go to Profile"
-        onPress={() => navigation.navigate("Profile")}
+        title="Create Profile"
+        onPress={() => navigation.navigate("CreateProfile", { name: "Tom" })}
       ></Button>
       <BookList />
     </View>
   );
 };
 
-export default HomePage;
+export default HomePageScreen;
