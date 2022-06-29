@@ -3,6 +3,7 @@ import Profile from "./components/Profile";
 import HomePage from "./components/HomePage";
 import LoginPage from "./components/LoginPage";
 import AddABook from "./components/AddABook";
+import UserContext from "./Contexts/UserContext";
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -40,7 +41,7 @@ export default function App() {
     return <LoginPage auth={auth} />;
   } else {
     return (
-      <>
+      <UserContext.Provider value = {user}>
         <Header />
         <NavigationContainer>
           <Stack.Navigator>
@@ -53,7 +54,7 @@ export default function App() {
             <Tab.Screen name="Profile" component={Profile} />
           </Tab.Navigator>
         </NavigationContainer>
-      </>
+      </UserContext.Provider>
     );
   }
 }

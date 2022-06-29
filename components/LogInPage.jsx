@@ -1,5 +1,5 @@
 
-import { StyleSheet, Button, SafeAreaView } from "react-native";
+import { StyleSheet, Button, SafeAreaView, Text, TouchableOpacity, ImageBackground, Image } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { useEffect } from "react";
@@ -17,32 +17,40 @@ const LoginPage = ({ auth }) => {
             const { id_token } = response.params;
             const credential = GoogleAuthProvider.credential(id_token);
             signInWithCredential(auth, credential);
-        } else {
-            console.log(response);
         }
     }, [response]);
 
     return (
         <SafeAreaView style={styles.container}>
-            <Button
-                disabled={!request}
-                title="Continue with Google"
-                color="#841584"
-                onPress={() => {
+        <Text>SWITCH BOOKS</Text>
+            <TouchableOpacity onPress={() => {
                     promptAsync();
-                }}
-                accessibilityLabel="Login/signup with your Google account"
-            />
+                }} style={{margin: 20}}>
+            <Image source={require("../assets/GoogleSignIn.png")} style={styles.signInImage}/>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 };
 
+
+<TouchableOpacity onPress={() => alert("Button pressed")}>
+   </TouchableOpacity>
+
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
+  signInImage : {
+    width: 200, 
+    height:50, 
+    resizeMode:'contain', 
+    borderWidth : 5, 
+    borderColor: 'red', 
+    borderRadius : 20
+  }
 });
 
 
