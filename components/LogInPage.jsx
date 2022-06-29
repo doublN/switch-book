@@ -1,5 +1,5 @@
 
-import { StyleSheet, Button, SafeAreaView, Text, TouchableOpacity, ImageBackground, Image } from "react-native";
+import { StyleSheet, SafeAreaView, Text, TouchableOpacity, Image } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { useEffect } from "react";
