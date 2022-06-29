@@ -1,5 +1,12 @@
-import * as ImaggePicker from "expo-image-picker";
-import { View, TextInput, StyleSheet, Button, TouchableHighlight } from "react-native-web";
+import * as ImagePicker from "expo-image-picker";
+
+import {
+    View,
+    TextInput,
+    StyleSheet,
+    Button,
+    TouchableHighlight,
+} from "react-native-web";
 import { useState } from "react";
 
 export default function CreateProfileScreen() {
@@ -8,40 +15,47 @@ export default function CreateProfileScreen() {
 
     const [selectedImage, setSelectedImage] = useState(null);
 
-    const openImagePicker = async () => {
+    let openImagePickerAsync = async () => {
         let permissionResult =
-            await ImagePicker.requestCameraPermissionsAsync();
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (permissionResult.granted === false) {
             alert("Permission to access camera roll is required!");
             return;
         }
+
+        let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+        if (pickerResult.cancelled === true) {
+            return;
+        }
+
+        setSelectedImage({ localUri: pickerResult.uri });
     };
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    
-    if(pickerResult.cancelled === true) {
-        return
-    }
-
-    setSelectedImage({localUri: pickerResult.uri})
-
     return (
-        <View>
-        {selectedImage? <Image source={{uri: selectedImage.localUri}}/>:null}
-        <TouchableHighlight title="Select Image" onPress={openImagePicker}/>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your Username"
-                onChangeText={onChangeUsername}
-            ></TextInput>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your Location"
-                onChangeText={onChangeLocation}
-            ></TextInput>
-            <Button title="Submit" />
-        </View>
+        <>
+            <View>
+                {selectedImage ? (
+                    <Image source={{ uri: selectedImage.localUri }} />
+                ) : null}
+                <TouchableHighlight
+                    title="Select Image"
+                    onPress={openImagePickerAsync}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter your Username"
+                    onChangeText={onChangeUsername}
+                ></TextInput>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter your Location"
+                    onChangeText={onChangeLocation}
+                ></TextInput>
+                <Button title="Submit" />
+            </View>
+        </>
     );
 }
 
