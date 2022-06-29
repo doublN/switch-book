@@ -1,54 +1,50 @@
-import * as Sharing from "expo-sharing";
-
-import { StatusBar } from "expo-status-bar";
-import { createContext, useState } from "react";
-import { StyleSheet, View, Button, Text } from "react-native";
-import LogInPageScreen from "./components/LogInPageScreen";
-
-import Navigator from "./components/Navigator";
-
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import LoginPage from "./components/LoginPage";
+import UserContext from "./Contexts/UserContext";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getFirestore } from "firebase/firestore";
+import { auth } from "./Utils/firebase";
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "./Utils/dbQueries";
 
 //Navigation
-import * as React from "react";
+import Navigator from "./components/Navigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateProfileScreen from "./components/CreateProfileScreen";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC15hpnCra3iuHNw9q1gbxerBHY5MZalEA",
-  authDomain: "switchbook-225b3.firebaseapp.com",
-  projectId: "switchbook-225b3",
-  storageBucket: "switchbook-225b3.appspot.com",
-  messagingSenderId: "731886943527",
-  appId: "1:731886943527:web:af3ffaf1fd4932b30cfd02",
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-// const firestore = getFirestore(app);
 
 //Navigation
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [user] = useAuthState(auth);
-  const UserContext = createContext();
-  return (
-    <>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Log in" component={LogInPageScreen} />
-          <Stack.Screen name="Navigation" component={Navigator} />
-          <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </>
-  );
+  // authorisedUser = user in authentication database
+  // currentUser = user in our firestore database
+  const [authorisedUser] = useAuthState(auth);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    // set currentUser (available to all components via context)
+    if (authorisedUser) {
+      getCurrentUser(authorisedUser).then((currentUser) => {
+        setCurrentUser(currentUser);
+      });
+    }
+  }, [authorisedUser]);
+
+  if (authorisedUser === null) {
+    return <LoginPage auth={auth} />;
+  } else {
+    return (
+      <UserContext.Provider value={{ currentUser }}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name={!currentUser ? "CreateProfile" : "Navigation"}
+              component={!currentUser ? CreateProfileScreen : Navigator}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserContext.Provider>
+    );
+  }
 }
