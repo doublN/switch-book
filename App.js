@@ -17,38 +17,36 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    // authorisedUser = user in authentication database
-    // currentUser = user in our firestore database
-    const [authorisedUser] = useAuthState(auth);
-    const [currentUser, setCurrentUser] = useState(null);
+  // authorisedUser = user in authentication database
+  // currentUser = user in our firestore database
+  const [authorisedUser] = useAuthState(auth);
+  const [currentUser, setCurrentUser] = useState(null);
 
-    useEffect(() => {
-        // set currentUser (available to all components via context)
-        if (authorisedUser) {
-            getCurrentUser(authorisedUser).then((currentUser) => {
-                setCurrentUser(currentUser);
-            });
-        }
-    }, [authorisedUser]);
-
-    if (authorisedUser === null) {
-        return <LoginPage auth={auth} />;
-    } else {
-        return (
-            <UserContext.Provider
-                value={{ currentUser, authorisedUser, setCurrentUser }}
-            >
-                <NavigationContainer>
-                    <Stack.Navigator>
-                        <Stack.Screen
-                            name={!currentUser ? "CreateProfile" : "Navigation"}
-                            component={
-                                !currentUser ? CreateProfileScreen : Navigator
-                            }
-                        />
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </UserContext.Provider>
-        );
+  useEffect(() => {
+    // set currentUser (available to all components via context)
+    if (authorisedUser) {
+      getCurrentUser(authorisedUser).then((currentUser) => {
+        setCurrentUser(currentUser);
+      });
     }
+  }, [authorisedUser]);
+
+  if (authorisedUser === null) {
+    return <LoginPage auth={auth} />;
+  } else {
+    return (
+      <UserContext.Provider
+        value={{ currentUser, authorisedUser, setCurrentUser }}
+      >
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name={!currentUser ? "CreateProfile" : "Navigator"}
+              component={!currentUser ? CreateProfileScreen : Navigator}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserContext.Provider>
+    );
+  }
 }
