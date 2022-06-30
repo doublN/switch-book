@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-
+import { createUser, getCurrentUser } from "../Utils/dbQueries";
 import {
     View,
     TextInput,
@@ -8,12 +8,16 @@ import {
     TouchableHighlight,
     Image,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import UserContext from "../Contexts/UserContext";
 
 export default function CreateProfileScreen({ navigation }) {
     const [username, onChangeUsername] = useState("");
     const [location, onChangeLocation] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
+    const { currentUser, authorisedUser, setCurrentUser } =
+        useContext(UserContext);
+    const [isSubmited, setIsSubmited] = useState(false);
 
     let openImagePickerAsync = async () => {
         let permissionResult =
@@ -32,6 +36,21 @@ export default function CreateProfileScreen({ navigation }) {
 
         setSelectedImage({ localUri: pickerResult.uri });
     };
+    useEffect(() => {
+        getCurrentUser(authorisedUser.uid).then((currentUser) => {
+            setCurrentUser(currentUser);
+        });
+    }, [isSubmited]);
+
+    const handleSubmit = () => {
+        return createUser(username, location, authorisedUser.uid).then(() => {
+            setIsSubmited(true);
+            navigation.navigate("Navigation");
+        });
+    };
+
+    console.log(currentUser);
+
     return (
         <>
             <View style={styles.view}>
@@ -52,15 +71,7 @@ export default function CreateProfileScreen({ navigation }) {
                     placeholder="Enter your Location"
                     onChangeText={onChangeLocation}
                 ></TextInput>
-                <Button
-                    title="Submit"
-                    onPress={() => {
-                        navigation.navigate("Navigation", {
-                            username,
-                            location,
-                        });
-                    }}
-                />
+                <Button title="Submit" onPress={handleSubmit} />
             </View>
         </>
     );
