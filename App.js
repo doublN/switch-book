@@ -1,5 +1,6 @@
 import LoginPage from "./components/LoginPage";
 import UserContext from "./Contexts/UserContext";
+import SingleBookScreen from "./components/SingleBookScreen"
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Utils/firebase";
 import { useState, useEffect } from "react";
@@ -39,9 +40,10 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name={!currentUser ? "CreateProfile" : "Navigation"}
-              component={!currentUser ? CreateProfileScreen : Navigator}
+              name={currentUser ? "CreateProfile" : "Navigation"}
+              component={currentUser ? CreateProfileScreen : Navigator}
             />
+            <Stack.Screen name="SingleBookScreen" component={SingleBookScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserContext.Provider>
