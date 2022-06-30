@@ -1,3 +1,4 @@
+
 import { Button, View, Text, TextInput, StyleSheet } from "react-native";
 import BookList from "./BookList"
 import { useContext, useState, useEffect } from "react";
@@ -5,6 +6,7 @@ import UserContext from "../Contexts/UserContext";
 import {getBooks} from "../Utils/dbQueries"
 
 const HomePageScreen = ({ navigation }) => {
+
   const {currentUser} = useContext(UserContext);
   const [search, setSearch] = useState("");
   const [books, setBooks] = useState([]);

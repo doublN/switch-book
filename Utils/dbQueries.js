@@ -11,7 +11,7 @@ import { firestore } from "./firebase";
 
 export const getCurrentUser = async (authorisedUser) => {
   const usersRef = collection(firestore, "users");
-  const queryUser = query(usersRef, where("uid", "==", authorisedUser.uid));
+  const queryUser = query(usersRef, where("uid", "==", authorisedUser));
 
   try {
     const querySnapshot = await getDocs(queryUser);
@@ -24,10 +24,13 @@ export const getCurrentUser = async (authorisedUser) => {
   }
 };
 
-export const createUser = async (authorisedUser) => {
+export const createUser = async (username, location, authorisedUser) => {
   try {
-    await setDoc(doc(firestore, "users", authorisedUser.uid), {
+    await setDoc(doc(firestore, "users", authorisedUser), {
       // insert data for database here (needs to include 'uid: authorisedUser.uid')
+      uid: authorisedUser,
+      username,
+      location,
     });
   } catch (err) {
     console.log(err);

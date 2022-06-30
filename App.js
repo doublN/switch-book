@@ -36,12 +36,14 @@ export default function App() {
     return <LoginPage auth={auth} />;
   } else {
     return (
-      <UserContext.Provider value={{ currentUser }}>
+      <UserContext.Provider
+        value={{ currentUser, authorisedUser, setCurrentUser }}
+      >
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name={currentUser ? "CreateProfile" : "Navigation"}
-              component={currentUser ? CreateProfileScreen : Navigator}
+              name={!currentUser ? "CreateProfile" : "Navigator"}
+              component={!currentUser ? CreateProfileScreen : Navigator}
             />
             <Stack.Screen name="SingleBookScreen" component={SingleBookScreen} />
           </Stack.Navigator>
