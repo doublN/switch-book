@@ -1,10 +1,10 @@
 import LoginPage from "./components/LoginPage";
 import UserContext from "./Contexts/UserContext";
-import SingleBookScreen from "./components/SingleBookScreen"
+import SingleBookScreen from "./components/SingleBookScreen";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Utils/firebase";
 import { useState, useEffect } from "react";
-import { getCurrentUser } from "./Utils/dbQueries";
+import { getUserByUid } from "./Utils/dbQueries";
 
 //Navigation
 import Navigator from "./components/Navigator";
@@ -26,7 +26,7 @@ export default function App() {
   useEffect(() => {
     // set currentUser (available to all components via context)
     if (authorisedUser) {
-      getCurrentUser(authorisedUser).then((currentUser) => {
+      getUserByUid(authorisedUser.uid).then((currentUser) => {
         setCurrentUser(currentUser);
       });
     }
@@ -45,7 +45,10 @@ export default function App() {
               name={!currentUser ? "CreateProfile" : "Navigator"}
               component={!currentUser ? CreateProfileScreen : Navigator}
             />
-            <Stack.Screen name="SingleBookScreen" component={SingleBookScreen} />
+            <Stack.Screen
+              name="SingleBookScreen"
+              component={SingleBookScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </UserContext.Provider>

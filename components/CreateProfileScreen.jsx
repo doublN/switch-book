@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { createUser, getCurrentUser } from "../Utils/dbQueries";
+import { createUser, getUserByUid } from "../Utils/dbQueries";
 import {
     View,
     TextInput,
@@ -74,6 +74,7 @@ export default function CreateProfileScreen({ navigation }) {
             </View>
         </>
     );
+
 }
 
 const styles = StyleSheet.create({
