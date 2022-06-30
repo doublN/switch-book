@@ -54,12 +54,12 @@ export default function CreateProfileScreen({ navigation }) {
                 ></TextInput>
                 <Button
                     title="Submit"
-                    onPress={() => {
-                        navigation.navigate("Navigation", {
-                            username,
-                            location,
-                        });
-                    }}
+                    // onPress={() => {
+                    //     navigation.navigate("Navigation", {
+                    //         username,
+                    //         location,
+                    //     });
+                    // }}
                 />
             </View>
         </>

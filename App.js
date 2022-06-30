@@ -39,8 +39,8 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name={!currentUser ? "CreateProfile" : "Navigation"}
-              component={!currentUser ? CreateProfileScreen : Navigator}
+              name={currentUser ? "CreateProfile" : "Navigation"}
+              component={currentUser ? CreateProfileScreen : Navigator}
             />
           </Stack.Navigator>
         </NavigationContainer>
