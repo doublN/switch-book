@@ -5,6 +5,7 @@ import {
   getDocs,
   setDoc,
   doc,
+  orderBy,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -35,7 +36,7 @@ export const createUser = async (authorisedUser) => {
 
 export const getBooks = async (searchText) => {
   const booksRef = collection(firestore, "books");
-  const queryBooks = query(booksRef);
+  const queryBooks = query(booksRef, orderBy('dateAdded', 'desc'));
 
   try {
     const querySnapshot = await getDocs(queryBooks);

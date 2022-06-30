@@ -43,7 +43,7 @@ const HomePageScreen = ({ navigation }) => {
         onChangeText={setSearch}
       ></TextInput>
       <Button title="Submit" onPress={() => {setSearchSubmit(true)}}></Button>
-      <BookList books={books} />
+      <BookList books={books} navigation={navigation} />
     </View>
   );
 };
