@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { createUser, getCurrentUser } from "../Utils/dbQueries";
+import { createUser, getUserByUid } from "../Utils/dbQueries";
 import {
   View,
   TextInput,
@@ -40,7 +40,7 @@ export default function CreateProfileScreen({ navigation }) {
 
   const handleSubmit = () => {
     return createUser(username, location, authorisedUser.uid).then(() => {
-      getCurrentUser(authorisedUser.uid).then((currentUser) => {
+      getUserByUid(authorisedUser.uid).then((currentUser) => {
         setCurrentUser(true);
         navigation.navigate("Navigator");
       });
