@@ -29,21 +29,41 @@ export const getUserByUid = async (uid) => {
 export const createUser = async (
   username,
   location,
-  authorisedUser,
+  authorisedUserId,
   selectedImage
 ) => {
   try {
-    await setDoc(doc(firestore, "users", authorisedUser), {
-      uid: authorisedUser,
-      username,
-      location,
-      selectedImage,
-      successfulSwaps: 0,
-      rating: 0,
-    });
+    await setDoc(
+      doc(firestore, "users", authorisedUserId),
+      {
+        uid: authorisedUserId,
+        username,
+        location,
+        selectedImage,
+        successfulSwaps: 0,
+        rating: 0,
+      },
+      { merge: true }
+    );
   } catch (err) {
     console.log(err);
   }
+};
+
+export const updateUser = async (
+  username,
+  location,
+  authorisedUserId,
+  selectedImage
+) => {
+  const userRef = doc(firestore, "users", authorisedUserId);
+
+  let updatedInfo = {};
+  username ? (updatedInfo.username = username) : null;
+  location ? (updatedInfo.location = location) : null;
+  selectedImage ? (updatedInfo.selectedImage = selectedImage) : null;
+
+  updateDoc(userRef, updatedInfo);
 };
 
 export const getBooks = async (searchText) => {
@@ -74,7 +94,11 @@ export const getBooks = async (searchText) => {
 
 export const getSwapsByIsbn = async (isbn) => {
   const swapsRef = collection(firestore, "swaps");
-  const querySwap = query(swapsRef, where("isbn", "==", isbn), where("status", "==", "available"));
+  const querySwap = query(
+    swapsRef,
+    where("isbn", "==", isbn),
+    where("status", "==", "available")
+  );
   try {
     const querySnapshot = await getDocs(querySwap);
     let swaps = [];
@@ -85,10 +109,10 @@ export const getSwapsByIsbn = async (isbn) => {
   }
 };
 
-export const updateSwapById = async(swapId, uid) =>{
+export const updateSwapById = async (swapId, uid) => {
   const swapRef = doc(firestore, "swaps", swapId);
-  updateDoc(swapRef, {status: "requested", requestedBy: uid});
-}
+  updateDoc(swapRef, { status: "requested", requestedBy: uid });
+};
 
 //AddBook requires a field called swapId that is unique
 //needs to check if isbn is in books, if not add it

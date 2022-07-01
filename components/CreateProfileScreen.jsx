@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { createUser, getUserByUid } from "../Utils/dbQueries";
+import { createUser, getUserByUid, updateUser } from "../Utils/dbQueries";
 import {
     View,
     TextInput,
@@ -7,6 +7,7 @@ import {
     Button,
     TouchableHighlight,
     Image,
+    Text,
 } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import UserContext from "../Contexts/UserContext";
@@ -14,8 +15,8 @@ import UserContext from "../Contexts/UserContext";
 export default function CreateProfileScreen({ navigation }) {
     const [username, onChangeUsername] = useState("");
     const [location, onChangeLocation] = useState("");
-    const [selectedImage, setSelectedImage] = useState(null);
-    const { authorisedUser, setCurrentUser } = useContext(UserContext);
+    const [selectedImage, setSelectedImage] = useState("null");
+    const { currentUser, authorisedUser, setCurrentUser } = useContext(UserContext);
 
     let openImagePickerAsync = async () => {
         let permissionResult =
@@ -40,34 +41,51 @@ export default function CreateProfileScreen({ navigation }) {
     };
 
     const handleSubmit = () => {
-        createUser(username, location, authorisedUser.uid, selectedImage).then(
-            () => {
-                getUserByUid(authorisedUser.uid).then((currentUser) => {
-                    setCurrentUser(currentUser);
-                    navigation.navigate("Navigator");
-                });
-            }
-        );
+        if (!currentUser) {
+            createUser(username, location, authorisedUser.uid, selectedImage).then(
+                () => {
+                    getUserByUid(authorisedUser.uid).then((currentUser) => {
+                        setCurrentUser(currentUser);
+                        navigation.navigate("Navigator");
+                    });
+                }
+            );
+        } else {
+            updateUser(username, location, authorisedUser.uid, selectedImage).then(
+                () => {
+                    getUserByUid(authorisedUser.uid).then((currentUser) => {
+                        setCurrentUser(currentUser);
+                        navigation.navigate("Navigator");
+                    });
+                }
+            );
+        }
     };
 
     return (
         <>
             <View style={styles.view}>
-                {selectedImage ? (
-                    <Image
-                        source={{ uri: selectedImage }}
+                {currentUser && currentUser.selectedImage
+                ? <Image
+                        source={{uri : currentUser.selectedImage}}
                         style={styles.thumbnail}
                     ></Image>
-                ) : null}
+                : selectedImage
+                    ? <Image
+                        source={require("../assets/defaultAvatar.png")}
+                        style={styles.thumbnail}
+                        ></Image>
+                    : <></>
+                }
                 <Button title="Add photo" onPress={openImagePickerAsync} />
                 <TextInput
                     style={styles.input}
-                    placeholder="Enter your Username"
+                    placeholder={!currentUser ? "Enter your Username" : `${currentUser.username}`}
                     onChangeText={onChangeUsername}
                 ></TextInput>
                 <TextInput
                     style={styles.input}
-                    placeholder="Enter your Location"
+                    placeholder={!currentUser ? "Enter your Location" : `${currentUser.location}`}
                     onChangeText={onChangeLocation}
                 ></TextInput>
                 <Button title="Submit" onPress={handleSubmit} />
