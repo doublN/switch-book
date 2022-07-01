@@ -12,7 +12,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateProfileScreen from "./components/CreateProfileScreen";
-
+import AddABookScreen from "./components/AddABookScreen";
 //Navigation
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -49,6 +49,7 @@ export default function App() {
               name="SingleBookScreen"
               component={SingleBookScreen}
             />
+            <Stack.Screen name="AddABookScreen" component={AddABookScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserContext.Provider>
