@@ -32,12 +32,12 @@ export default function App() {
     }
   }, [authorisedUser]);
 
-  if (authorisedUser === null) {
+  if (!authorisedUser) {
     return <LoginPage auth={auth} />;
-  } else if (currentUser === null) {
+  } else if (!currentUser) {
     return (
       <UserContext.Provider
-        value={{ currentUser, authorisedUser, setCurrentUser }}
+        value={{ currentUser, authorisedUser, setCurrentUser, auth }}
       >
         <CreateProfileScreen />
       </UserContext.Provider>
@@ -45,7 +45,7 @@ export default function App() {
   } else {
     return (
       <UserContext.Provider
-        value={{ currentUser, authorisedUser, setCurrentUser }}
+        value={{ currentUser, authorisedUser, setCurrentUser, auth }}
       >
         <NavigationContainer>
           <Stack.Navigator>
@@ -58,6 +58,7 @@ export default function App() {
               name="SingleBookScreen"
               component={SingleBookScreen}
             />
+            <Stack.Screen name="AddABook" component={AddABookScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserContext.Provider>

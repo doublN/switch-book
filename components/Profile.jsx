@@ -1,9 +1,10 @@
 import {useContext} from "react";
 import { Button, View, Text, Image } from "react-native";
 import UserContext from "../Contexts/UserContext"
+import { LogoutButton } from "./LogoutButton";
 
 const Profile = ({ navigation }) => {
-    const {currentUser} = useContext(UserContext);
+    const {currentUser, auth} = useContext(UserContext);
 
     return (
         <View
@@ -11,6 +12,7 @@ const Profile = ({ navigation }) => {
         >
             <Text>Profile Screen</Text>
             <Image style={{resizeMode:'contain', height: 200, width : 100}} source={{uri : currentUser.selectedImage}} />
+            <Text>Welcome {currentUser.username}!</Text>
             <Text>Set location: {currentUser.location}</Text>
             <Button
                 title="Edit your profile"
@@ -24,6 +26,7 @@ const Profile = ({ navigation }) => {
                 title="Find a book"
                 onPress={() => navigation.navigate("Navigator" , {screen : "HomePage"})}
             ></Button>
+            <LogoutButton auth={auth}/>
         </View>
     );
 };
