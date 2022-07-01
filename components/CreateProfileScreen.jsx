@@ -42,8 +42,8 @@ export default function CreateProfileScreen({ navigation }) {
     const handleSubmit = () => {
         createUser(username, location, authorisedUser.uid, selectedImage).then(
             () => {
-                getCurrentUser(authorisedUser.uid).then(() => {
-                    setCurrentUser(true);
+                getUserByUid(authorisedUser.uid).then((currentUser) => {
+                    setCurrentUser(currentUser);
                     navigation.navigate("Navigator");
                 });
             }
