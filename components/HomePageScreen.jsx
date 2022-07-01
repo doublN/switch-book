@@ -1,39 +1,46 @@
-
 import { Button, View, Text, TextInput, StyleSheet } from "react-native";
-import BookList from "./BookList"
+import BookList from "./BookList";
 import { useContext, useState, useEffect } from "react";
 import UserContext from "../Contexts/UserContext";
-import {getBooks} from "../Utils/dbQueries"
+import { getBooks } from "../Utils/dbQueries";
 
 const HomePageScreen = ({ navigation }) => {
-
-  const {currentUser} = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
   const [search, setSearch] = useState("");
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [searchSubmit, setSearchSubmit] = useState(false)
-  
-  useEffect(() =>{
-    setSearchSubmit(false);
-    getBooks(search).then((books) =>{
-      setBooks(books);
-      setIsLoading(false);
-    }).catch((err) =>{
-      setError(true);
-      console.log("err");
-    })
-  }, [error, searchSubmit])
+  const [searchSubmit, setSearchSubmit] = useState(false);
 
-  if(error){
-    return <View>
+  useEffect(() => {
+    setSearchSubmit(false);
+    getBooks(search)
+      .then((books) => {
+        setBooks(books);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
+        console.log("err");
+      });
+  }, [error, searchSubmit]);
+
+  if (error) {
+    return (
+      <View>
         <Text>Sorry, error loading books, please try again!</Text>
-        <Button onPress={() => {setError(false)}} title="Retry"></Button>
-    </View>
+        <Button
+          onPress={() => {
+            setError(false);
+          }}
+          title="Retry"
+        ></Button>
+      </View>
+    );
   }
 
-  if(isLoading){
-    return <Text>Loading books!</Text>
+  if (isLoading) {
+    return <Text>Loading books!</Text>;
   }
 
   return (
@@ -44,7 +51,12 @@ const HomePageScreen = ({ navigation }) => {
         placeholder="Search for title, author, or category"
         onChangeText={setSearch}
       ></TextInput>
-      <Button title="Submit" onPress={() => {setSearchSubmit(true)}}></Button>
+      <Button
+        title="Submit"
+        onPress={() => {
+          setSearchSubmit(true);
+        }}
+      ></Button>
       <BookList books={books} navigation={navigation} />
     </View>
   );
@@ -52,11 +64,11 @@ const HomePageScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   input: {
-          height: 40,
-          margin: 12,
-          borderWidth: 1,
-          padding: 10,
-      }
-})
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
 
 export default HomePageScreen;
