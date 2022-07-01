@@ -67,5 +67,5 @@ export default function SingleBookScreen({route: {params: {book}}}) {
         }
        />
     </View>
-  )
+  );
 }
