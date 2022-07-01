@@ -2,8 +2,10 @@ import {
   collection,
   query,
   where,
+  getDoc,
   getDocs,
   setDoc,
+  updateDoc,
   doc,
   orderBy,
 } from "firebase/firestore";
@@ -72,8 +74,7 @@ export const getBooks = async (searchText) => {
 
 export const getSwapsByIsbn = async (isbn) => {
   const swapsRef = collection(firestore, "swaps");
-  const querySwap = query(swapsRef, where("isbn", "==", isbn));
-
+  const querySwap = query(swapsRef, where("isbn", "==", isbn), where("status", "==", "available"));
   try {
     const querySnapshot = await getDocs(querySwap);
     let swaps = [];
@@ -83,3 +84,12 @@ export const getSwapsByIsbn = async (isbn) => {
     console.log(err);
   }
 };
+
+export const updateSwapById = async(swapId, uid) =>{
+  const swapRef = doc(firestore, "swaps", swapId);
+  updateDoc(swapRef, {status: "requested", requestedBy: uid});
+}
+
+//AddBook requires a field called swapId that is unique
+//needs to check if isbn is in books, if not add it
+//needs to add a record to swaps with swapId etc.
