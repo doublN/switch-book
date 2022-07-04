@@ -13,7 +13,7 @@ import { getUserByUid, getIsbnsByUserID, getBooksByIsbn } from '../Utils/dbQueri
 export default function OtherUserScreen({route, navigation}) {
     const { user } = route.params;
     const [userInfo, setUserInfo] = useState({})
-    const [offeredBooks, setOfferedBooks] = useState("")
+    const [userBooks, setUserBooks] = useState("")
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -21,10 +21,10 @@ export default function OtherUserScreen({route, navigation}) {
         async function getUserInfo(){
             try{
                 const userDetails = await getUserByUid(user);
-                const userBooks = await getIsbnsByUserID(user);
-                const books = await Promise.all(userBooks.map(swap => getBooksByIsbn(swap.isbn)));
+                const userSwaps = await getIsbnsByUserID(user);
+                const userBooks = await Promise.all(userSwaps.map(swap => getBooksByIsbn(swap.isbn)));
                 setUserInfo(userDetails);
-                setOfferedBooks(books.flat(1));
+                setUserBooks(userBooks.flat(1));
                 setIsLoading(false);
             } catch(err) {
                 setError(true);
@@ -37,7 +37,7 @@ export default function OtherUserScreen({route, navigation}) {
     if (error) {
         return (
           <View>
-            <Text>Sorry, error loading books, please try again!</Text>
+            <Text>Sorry, error loading this user's books, please try again!</Text>
             <Button
               onPress={() => {
                 setError(false);
@@ -65,7 +65,7 @@ export default function OtherUserScreen({route, navigation}) {
                     <Text>Date joined: {new Date(userInfo.dateJoined.seconds * 1000).toDateString()}</Text>
                 </View>
             }
-            data={offeredBooks}
+            data={userBooks}
             renderItem={({item}) =>
             <Pressable style={{paddingTop: 30}} onPress={() => {
                 navigation.navigate("SingleBookScreen", { book: item });
