@@ -1,9 +1,11 @@
-import { View, Text, Image, Button, FlatList, ScrollView, Alert } from 'react-native'
-import { useEffect, useState, useContext, useLayoutEffect } from 'react'
+import { View, Text, Image, Button, FlatList, ScrollView, Alert, TouchableOpacity } from 'react-native'
+import { useState, useContext, useLayoutEffect } from 'react'
 import { getSwapsByIsbn, getUserByUid, updateSwapById } from '../Utils/dbQueries'
 import UserContext from "../Contexts/UserContext"
 
-export default function SingleBookScreen({route: {params: {book}}}) {
+export default function SingleBookScreen({route, navigation}) {
+
+  const { book } = route.params;
   const [offerInfo, setOfferInfo] = useState([])
   const [request, setRequest] = useState(false);
   const {currentUser} = useContext(UserContext);
@@ -55,13 +57,15 @@ export default function SingleBookScreen({route: {params: {book}}}) {
         data={offerInfo}
         renderItem={({item}) =>
           <ScrollView style={{paddingTop: 30}}>
-            <Image style={{resizeMode:'contain', height: 100, width : 100}} source={{uri : item.selectedImage}} />
+            <TouchableOpacity onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy })}>
+              <Image style={{resizeMode:'contain', height: 100, width : 100, borderRadius: 100}} source={{uri : item.selectedImage}}/>
+            </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+              <Text>Offered by: </Text>
+              <Text style={{color: 'blue'}} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy })}>{item.username}</Text>
+            </View>
             <Text>Condition: {item.condition}</Text>
-            <Text>Offered by: {item.username}</Text>
-            <Text>Location: {item.location}</Text>
             <Text>Rating: {item.rating}</Text>
-            <Text>Successful swaps: {item.successfulSwaps}</Text>
-            <Text>{item.swapId}</Text>
             <Button title="Request this book" onPress={() => {handleRequest(item.swapId)}}/>
           </ScrollView>
         }
