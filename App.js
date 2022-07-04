@@ -15,24 +15,25 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateProfileScreen from "./components/CreateProfileScreen";
 import AddABookScreen from "./components/AddABookScreen";
+import { OfferBookScreen } from "./components/OfferBookScreen";
 //Navigation
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // authorisedUser = user in authentication database
-  // currentUser = user in our firestore database
-  const [authorisedUser] = useAuthState(auth);
-  const [currentUser, setCurrentUser] = useState(null);
+    // authorisedUser = user in authentication database
+    // currentUser = user in our firestore database
+    const [authorisedUser] = useAuthState(auth);
+    const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
-    // set currentUser (available to all components via context)
-    if (authorisedUser) {
-      getUserByUid(authorisedUser.uid).then((currentUser) => {
-        setCurrentUser(currentUser);
-      });
-    }
-  }, [authorisedUser]);
+    useEffect(() => {
+        // set currentUser (available to all components via context)
+        if (authorisedUser) {
+            getUserByUid(authorisedUser.uid).then((currentUser) => {
+                setCurrentUser(currentUser);
+            });
+        }
+    }, [authorisedUser]);
 
   if (!authorisedUser) {
     return <LoginPage auth={auth} />;
