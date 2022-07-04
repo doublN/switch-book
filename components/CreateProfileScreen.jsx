@@ -79,7 +79,7 @@ export default function CreateProfileScreen({ navigation }) {
                         style={styles.thumbnail}
                         ></Image>
                 }
-                <Button title="Add photo" onPress={openImagePickerAsync} style={styles.button}/>
+                <Button title={!currentUser ? "Add profile picture" : "Edit profile picture"} onPress={openImagePickerAsync} style={styles.button}/>
                 <TextInput
                     style={styles.input}
                     placeholder={!currentUser ? "Enter your Username" : `${currentUser.username}`}

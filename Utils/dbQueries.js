@@ -2,7 +2,7 @@ import {
   collection,
   query,
   where,
-  getDoc,
+  addDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -27,7 +27,7 @@ export const getUserByUid = async (uid) => {
   }
 };
 
-const getAllUsers = async() => {
+const getAllUsers = async () => {
   const usersRef = collection(firestore, "users");
   const queryUser = query(usersRef);
 
@@ -39,7 +39,7 @@ const getAllUsers = async() => {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 export const createUser = async (
   username,
@@ -47,9 +47,13 @@ export const createUser = async (
   authorisedUserId,
   selectedImage
 ) => {
-    try {
+  try {
     const users = await getAllUsers();
-    if(users.filter((user) => {return username === user.username}).length > 0){
+    if (
+      users.filter((user) => {
+        return username === user.username;
+      }).length > 0
+    ) {
       throw new Error("Sorry, that username already exists");
     }
 
@@ -62,13 +66,14 @@ export const createUser = async (
         selectedImage,
         successfulSwaps: 0,
         rating: 0,
-        dateJoined : new Date(Date.now())
+        dateJoined: new Date(Date.now()),
       },
       { merge: true }
     );
   } catch (err) {
-    Alert.alert("Error", "That username already exists!", 
-    [{text : "OK", style: 'cancel'}])
+    Alert.alert("Error", "That username already exists!", [
+      { text: "OK", style: "cancel" },
+    ]);
   }
 };
 
@@ -159,6 +164,38 @@ export const getSwapsByUserID = async (uid) => {
     querySnapshot.forEach((docs) => books.push(docs.data()));
     const currentUser = books;
     return currentUser;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getMessages = async (swapId) => {
+  const messagesRef = collection(firestore, "chats");
+  const queryMessages = query(messagesRef, where("swapId", "==", swapId));
+  try {
+    const querySnapshot = await getDocs(queryMessages);
+    let messages = [];
+    querySnapshot.forEach((docs) => messages.push(docs.data()));
+    return messages;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addMessage = async (swapId, currentUser, text) => {
+  try {
+    await addDoc(
+      collection(firestore, "chats"),
+      {
+        swapId,
+        text,
+        createdAt: new Date().getTime(),
+        user: {
+          _id: currentUser.uid,
+        },
+      },
+      { merge: true }
+    );
   } catch (err) {
     console.log(err);
   }
