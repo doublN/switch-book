@@ -2,6 +2,7 @@ import LoginPage from "./components/LoginPage";
 import UserContext from "./Contexts/UserContext";
 import SingleBookScreen from "./components/SingleBookScreen";
 import OtherUserScreen from "./components/OtherUserScreen";
+import ChatScreen from "./components/ChatScreen";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Utils/firebase";
 import { useState, useEffect } from "react";
@@ -61,6 +62,7 @@ export default function App() {
             />
             <Stack.Screen name="OtherUserScreen" component={OtherUserScreen} />
             <Stack.Screen name="AddABook" component={AddABookScreen} />
+            <Stack.Screen name="Chat" component={ChatScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserContext.Provider>
