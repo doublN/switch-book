@@ -49,7 +49,10 @@ export default function CreateProfileScreen({ navigation }) {
                         navigation.navigate("Navigator");
                     });
                 }
-            );
+            ).catch((err) =>{
+                console.log("errrrrrrr")
+                console.log(err);
+            });
         } else {
             updateUser(username, location, authorisedUser.uid, selectedImage).then(
                 () => {
