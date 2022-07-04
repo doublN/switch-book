@@ -8,7 +8,7 @@ import {
     Button
 } from "react-native";
 import { useLayoutEffect, useState } from "react";
-import { getUserByUid, getIsbnsByUserID, getBooksByIsbn } from '../Utils/dbQueries'
+import { getUserByUid, getSwapsByUserID, getBookByIsbn } from '../Utils/dbQueries'
 
 export default function OtherUserScreen({route, navigation}) {
     const { user } = route.params;
@@ -21,10 +21,10 @@ export default function OtherUserScreen({route, navigation}) {
         async function getUserInfo(){
             try{
                 const userDetails = await getUserByUid(user);
-                const userSwaps = await getIsbnsByUserID(user);
-                const userBooks = await Promise.all(userSwaps.map(swap => getBooksByIsbn(swap.isbn)));
+                const userSwaps = await getSwapsByUserID(user);
+                const userBooks = await Promise.all(userSwaps.map(swap => getBookByIsbn(swap.isbn)));
                 setUserInfo(userDetails);
-                setUserBooks(userBooks.flat(1));
+                setUserBooks(userBooks);
                 setIsLoading(false);
             } catch(err) {
                 setError(true);
