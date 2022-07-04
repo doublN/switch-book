@@ -1,9 +1,9 @@
 import * as ImagePicker from "expo-image-picker";
 import { createUser, getUserByUid, updateUser } from "../Utils/dbQueries";
 import {
+    StyleSheet,
     View,
     TextInput,
-    StyleSheet,
     Button,
     TouchableHighlight,
     Image,
@@ -77,7 +77,7 @@ export default function CreateProfileScreen({ navigation }) {
                         ></Image>
                     : <></>
                 }
-                <Button title="Add photo" onPress={openImagePickerAsync} />
+                <Button title="Add photo" onPress={openImagePickerAsync} style={styles.button}/>
                 <TextInput
                     style={styles.input}
                     placeholder={!currentUser ? "Enter your Username" : `${currentUser.username}`}
