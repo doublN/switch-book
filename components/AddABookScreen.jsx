@@ -62,20 +62,13 @@ export default function AddABookScreen() {
         onChangeText={setSearchText}
       ></TextInput>
       <Button title="Submit" onPress={handleSubmit}></Button>
-      <View style={styles.list}>
+      <View>
         {books
           ? books.map((book) => {
               return (
-                <Pressable style={styles.logBox} key={book.id}>
+                <Pressable style={styles.list} key={book.id}>
                   <Image
-                    style={{
-                      resizeMode: "contain",
-                      height: 300,
-                      width: 300,
-                      borderRadius: 300 / 2,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
+                    style={styles.image}
                     source={{
                       uri: `${book.volumeInfo.imageLinks.thumbnail}`,
                     }}
@@ -98,6 +91,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 50,
     borderRadius: 30,
+    padding: 20,
+    margin: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#423034",
+    backgroundColor: "#423034",
+    borderRadius: 30,
   },
   search: {
     height: 40,
@@ -106,12 +105,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 30,
   },
-  logBox: {
-    padding: 20,
-    margin: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#F0F0F0",
-    backgroundColor: "#F9F9F9",
-    borderRadius: 30,
-  },
+image:{
+  resizeMode: "contain",
+  height: 300,
+  width: 300,
+  borderRadius: 300 / 2,
+  justifyContent: "center",
+  alignItems: "center",
+}
 });
