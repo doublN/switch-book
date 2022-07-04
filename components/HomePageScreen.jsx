@@ -3,8 +3,9 @@ import BookList from "./BookList";
 import { useContext, useState, useEffect } from "react";
 import UserContext from "../Contexts/UserContext";
 import { getBooks } from "../Utils/dbQueries";
+import { Feather, Entypo } from "@expo/vector-icons";
 
-const HomePageScreen = ({ navigation }) => {
+const HomePageScreen = ({navigation, clicked, setCLicked}) => {
   const { currentUser } = useContext(UserContext);
   const [search, setSearch] = useState("");
   const [books, setBooks] = useState([]);
@@ -27,7 +28,7 @@ const HomePageScreen = ({ navigation }) => {
 
   if (error) {
     return (
-      <View>
+      <View style={styles.view}>
         <Text>Sorry, error loading books, please try again!</Text>
         <Button
           onPress={() => {
@@ -44,34 +45,79 @@ const HomePageScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Available books</Text>
+    <View >
+            <View
+        style={
+          clicked
+            ? styles.searchBar__clicked
+            : styles.searchBar__unclicked
+        }
+      >
+
+      <Feather
+          name="search"
+          size={20}
+          color="black"
+          style={{ marginLeft: 1 }}
+          />
+
       <TextInput
-        style={styles.input}
+        style={styles.searchBar}
         placeholder="Search for title, author, or category"
         onChangeText={setSearch}
-      ></TextInput>
+        onFocus={() => {
+          setSearchSubmit(true);
+        }}
+        />
+
+      </View>
+      {clicked && (
+        <View>
       <Button
         title="Submit"
         onPress={() => {
-          setSearchSubmit(true);
+          setSearchSubmit(false);
         }}
-      ></Button>
-      <BookList books={books} navigation={navigation} />
+        ></Button>
+        </View>
+      )}
+      <BookList books={books} navigation={navigation} style={styles.booklist}/>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  input: {
-    fontFamily:"Avenir",
+  text:{
+      fontFamily:"Avenir",
+      fontSize: 15,
+      textAlign: "center",
+      color: "#423034"
+  },
+  searchBar: {
     fontSize: 15,
+    marginLeft: 10,
+    width: "90%",
+    fontFamily:"Avenir",
     textAlign: "center",
-    color: "#423034",
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
+    height: 30,
+    backgroundColor: "white",
     padding: 10,
+    borderRadius: 30
+  },
+  searchBar__unclicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "95%",
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  searchBar__clicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "80%",
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
 });
 

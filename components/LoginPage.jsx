@@ -14,8 +14,8 @@ import {
   Avenir,
 } from "@expo-google-fonts/dev";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faGoogle} from "@fortawesome/free-brands-svg-icons/faGoogle";
-import { faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
+// import { faGoogle} from "@fortawesome/free-brands-svg-icons/faGoogle";
+import { faGoogle, faFacebook, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 
 const LoginPage = ({ auth }) => {
@@ -51,9 +51,9 @@ const LoginPage = ({ auth }) => {
         onPress={() => {
           promptAsync();
         }}
-        style={styles.signInImage}>
-                <FontAwesomeIcon icon={faGoogle}/>
+        style={styles.icons}>
         <FontAwesomeIcon icon={faFacebook}/>
+        <FontAwesomeIcon icon={faGoogle}/>
         <FontAwesomeIcon icon={faTwitter}/>
              </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -61,20 +61,17 @@ const LoginPage = ({ auth }) => {
   );
 };
 
-<TouchableOpacity onPress={() => alert("Button pressed")}></TouchableOpacity>;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#dacbc7",
-    resizeMode:"cover",
-    flexDirection: "row"
-      },
-  signInImage: {
-    resizeMode: "contain",
-    justifyContent: 'space-between'
+    backgroundColor: "#dddddd",
+  },
+  icons: {
+    marginTop: 30,
+    flexDirection: "row",
+    justifyContent: 'space-between',
   },
   imageFp: {
     marginBottom: 100,
@@ -88,13 +85,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 24,
     textAlign: "center",
-    color: "#423034"
+    color: "#423034",
+
       },
   body:{
     fontFamily:"Avenir",
     fontSize: 15,
     textAlign: "center",
-    color: "#423034"
+    color: "#423034",
       }
 });
 
