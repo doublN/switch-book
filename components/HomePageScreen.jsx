@@ -64,6 +64,10 @@ const HomePageScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   input: {
+    fontFamily:"Avenir",
+    fontSize: 15,
+    textAlign: "center",
+    color: "#423034",
     height: 40,
     margin: 12,
     borderWidth: 1,
