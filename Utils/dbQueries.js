@@ -109,9 +109,37 @@ export const getSwapsByIsbn = async (isbn) => {
   }
 };
 
+export const getBooksByIsbn = async (isbn) => {
+  const booksRef = collection(firestore, "books");
+  const queryBooks = query(booksRef, where("isbn", "==", isbn));
+  try {
+    const querySnapshot = await getDocs(queryBooks);
+    let books = [];
+    querySnapshot.forEach((docs) => books.push(docs.data()));
+    return books;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const updateSwapById = async (swapId, uid) => {
   const swapRef = doc(firestore, "swaps", swapId);
   updateDoc(swapRef, { status: "requested", requestedBy: uid });
+};
+
+export const getIsbnsByUserID = async (uid) => {
+  const swapsRef = collection(firestore, "swaps");
+  const queryUser = query(swapsRef, where("offeredBy", "==", uid));
+
+  try {
+    const querySnapshot = await getDocs(queryUser);
+    let books = [];
+    querySnapshot.forEach((docs) => books.push(docs.data()));
+    const currentUser = books;
+    return currentUser;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 //AddBook requires a field called swapId that is unique
