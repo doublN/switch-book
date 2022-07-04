@@ -131,14 +131,14 @@ export const getSwapsByIsbn = async (isbn) => {
   }
 };
 
-export const getBooksByIsbn = async (isbn) => {
+export const getBookByIsbn = async (isbn) => {
   const booksRef = collection(firestore, "books");
   const queryBooks = query(booksRef, where("isbn", "==", isbn));
   try {
     const querySnapshot = await getDocs(queryBooks);
     let books = [];
     querySnapshot.forEach((docs) => books.push(docs.data()));
-    return books;
+    return books[0];
   } catch (err) {
     console.log(err);
   }
@@ -149,7 +149,7 @@ export const updateSwapById = async (swapId, uid) => {
   updateDoc(swapRef, { status: "requested", requestedBy: uid });
 };
 
-export const getIsbnsByUserID = async (uid) => {
+export const getSwapsByUserID = async (uid) => {
   const swapsRef = collection(firestore, "swaps");
   const queryUser = query(swapsRef, where("offeredBy", "==", uid));
 
