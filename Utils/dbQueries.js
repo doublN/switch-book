@@ -9,6 +9,7 @@ import {
   doc,
   orderBy,
 } from "firebase/firestore";
+import { Alert } from "react-native";
 import { firestore } from "./firebase";
 
 export const getUserByUid = async (uid) => {
@@ -26,13 +27,32 @@ export const getUserByUid = async (uid) => {
   }
 };
 
+const getAllUsers = async() => {
+  const usersRef = collection(firestore, "users");
+  const queryUser = query(usersRef);
+
+  try {
+    const querySnapshot = await getDocs(queryUser);
+    let users = [];
+    querySnapshot.forEach((docs) => users.push(docs.data()));
+    return users;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export const createUser = async (
   username,
   location,
   authorisedUserId,
   selectedImage
 ) => {
-  try {
+    try {
+    const users = await getAllUsers();
+    if(users.filter((user) => {return username === user.username}).length > 0){
+      throw new Error("Sorry, that username already exists");
+    }
+
     await setDoc(
       doc(firestore, "users", authorisedUserId),
       {
@@ -42,11 +62,13 @@ export const createUser = async (
         selectedImage,
         successfulSwaps: 0,
         rating: 0,
+        dateJoined : new Date(Date.now())
       },
       { merge: true }
     );
   } catch (err) {
-    console.log(err);
+    Alert.alert("Error", "That username already exists!", 
+    [{text : "OK", style: 'cancel'}])
   }
 };
 

@@ -5,17 +5,15 @@ import {
     View,
     TextInput,
     Button,
-    TouchableHighlight,
     Image,
-    Text,
 } from "react-native";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import UserContext from "../Contexts/UserContext";
 
 export default function CreateProfileScreen({ navigation }) {
     const [username, onChangeUsername] = useState("");
     const [location, onChangeLocation] = useState("");
-    const [selectedImage, setSelectedImage] = useState("null");
+    const [selectedImage, setSelectedImage] = useState(null);
     const { currentUser, authorisedUser, setCurrentUser } = useContext(UserContext);
 
     let openImagePickerAsync = async () => {
@@ -29,6 +27,7 @@ export default function CreateProfileScreen({ navigation }) {
 
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            base64: true
         });
 
         if (pickerResult.cancelled === true) {
@@ -36,22 +35,22 @@ export default function CreateProfileScreen({ navigation }) {
         }
         setSelectedImage(() => {
             const base64ToUpload = `data:image/jpeg;base64,${pickerResult.base64}`;
-            return base64ToUpload;
+            return {base64 : base64ToUpload, uri : pickerResult.uri};
         });
     };
 
     const handleSubmit = () => {
         if (!currentUser) {
-            createUser(username, location, authorisedUser.uid, selectedImage).then(
+            createUser(username, location, authorisedUser.uid, selectedImage.base64).then(
                 () => {
                     getUserByUid(authorisedUser.uid).then((currentUser) => {
                         setCurrentUser(currentUser);
                         navigation.navigate("Navigator");
                     });
                 }
-            );
+            )
         } else {
-            updateUser(username, location, authorisedUser.uid, selectedImage).then(
+            updateUser(username, location, authorisedUser.uid, selectedImage.base64).then(
                 () => {
                     getUserByUid(authorisedUser.uid).then((currentUser) => {
                         setCurrentUser(currentUser);
@@ -65,17 +64,20 @@ export default function CreateProfileScreen({ navigation }) {
     return (
         <>
             <View style={styles.view}>
-                {currentUser && currentUser.selectedImage
+                {selectedImage
                 ? <Image
+                        source={{uri : selectedImage.uri}}
+                        style={styles.thumbnail}
+                        ></Image>
+                : currentUser && currentUser.selectedImage 
+                    ? <Image
                         source={{uri : currentUser.selectedImage}}
                         style={styles.thumbnail}
                     ></Image>
-                : selectedImage
-                    ? <Image
+                    : <Image
                         source={require("../assets/defaultAvatar.png")}
                         style={styles.thumbnail}
                         ></Image>
-                    : <></>
                 }
                 <Button title="Add photo" onPress={openImagePickerAsync} style={styles.button}/>
                 <TextInput
