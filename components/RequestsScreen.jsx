@@ -3,7 +3,7 @@ import React, {useContext, useLayoutEffect, useState} from 'react'
 import UserContext from '../Contexts/UserContext';
 import { getRequestsByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries'
 
-export default function RequestsScreen() {
+export default function RequestsScreen({navigation}) {
   const {currentUser} = useContext(UserContext);
   const [requestedBooks, setRequestedBooks]=useState([])
   const [shouldUpdate, setShouldUpdate] = useState(false)
@@ -39,7 +39,7 @@ return (
           <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
           <Text style={styles.body}>{item.title} by {item.author}</Text>
           <Text style={styles.body}>Swap Status : {item.status === "requested" ? "accepted" : item.status}</Text>
-          {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: currentUser.username })}></Button>: null}
+          {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy })}></Button>: null}
           {item.status === "requested" ? <Button title="Deny Request" style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}} /> : <Button title="Deny request" style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}/>}
           {item.status === "completed" ? <Button style={styles.button} title="Rate transaction" /> : null}
       </View>
