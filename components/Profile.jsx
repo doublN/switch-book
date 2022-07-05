@@ -28,7 +28,7 @@ const Profile = ({ navigation }) => {
             <Pressable
                 style={styles.button}
                 onPress={() => navigation.navigate("AddABook")}
-                ><Text styles={styles.text}>Add a book</Text></Pressable>
+                ><Text styles={styles.text}>Offer a book</Text></Pressable>
             <Pressable
                 style={styles.button}
                 onPress={() => navigation.navigate("Navigator" , {screen : "HomePage"})}
