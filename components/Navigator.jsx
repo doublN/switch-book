@@ -13,18 +13,12 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = ({ route })=> {
     return (
-        <Tab.Navigator screenOptions={{ headerShown: false }} style={styles.tabNavigator}>
+        <Tab.Navigator screenOptions={{ headerShown: false }} >
                 <Tab.Screen name="Home" component={HomePageScreen} options ={{tabBarIcon: ({size, color}) => (<FontAwesomeIcon icon={faBook}/> )}}/>
                 <Tab.Screen name="Profile" component={Profile} options ={{tabBarIcon: ({size, color}) => (<FontAwesomeIcon icon={faUserGear}/> )}} />
                 <Tab.Screen name="Interactions" component={InteractionsScreen} options ={{tabBarIcon: ({size, color}) => (<FontAwesomeIcon icon={faArrowsRotate} /> )}} />
             </Tab.Navigator>
     );
 }
-
-const styles = StyleSheet.create({
-    tabNavigator:{
-        color: "#dacbc7",
-    }
-})
 
 export default Navigator
