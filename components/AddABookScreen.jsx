@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
           padding: 20,
           margin: 10,
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: "#423034",
+          borderColor: "#ffffff",
           backgroundColor: "",
           borderRadius: 30,
         },

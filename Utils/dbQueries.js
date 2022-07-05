@@ -91,7 +91,7 @@ export const addBook = async ({ volumeInfo, id }) => {
             longDescription: volumeInfo.description,
             isbn: isbn[0].identifier,
             coverImageUri: volumeInfo.imageLinks.thumbnail,
-            dateAdd: utcStr,
+            dateAdded: utcStr,
             shortDescription,
         });
     } catch (err) {
