@@ -45,7 +45,7 @@ const LoginPage = ({ auth }) => {
       <Text style={styles.title}>SWITCH BOOK</Text>
       <Image style={styles.imageFp}
           source={{uri:'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'}}></Image>
-      <Text style={styles.body}>Sign in</Text>
+      <Text style={styles.body}>Sign in with </Text>
       
       <TouchableOpacity
         onPress={() => {
@@ -66,13 +66,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#dddddd",
+    backgroundColor: "#eeeeee",
   },
   icons: {
     marginTop: 30,
     flexDirection: "row",
     justifyContent: 'space-between',
-  },
+     },
   imageFp: {
     marginBottom: 100,
     height: 280,
@@ -81,18 +81,17 @@ const styles = StyleSheet.create({
   },
   title:{
     fontFamily:"Avenir",
-    fontSize: 30,
+    fontSize: 33,
     fontWeight: "bold",
     marginBottom: 24,
     textAlign: "center",
-    color: "#423034",
-
+    color: "#333333",
       },
   body:{
     fontFamily:"Avenir",
     fontSize: 15,
     textAlign: "center",
-    color: "#423034",
+    color: "#333333",
       }
 });
 

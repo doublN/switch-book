@@ -4,6 +4,7 @@ import {
   query,
   where,
   addDoc,
+  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -30,53 +31,101 @@ export const getUserByUid = async (uid) => {
 };
 
 const getAllUsers = async () => {
-  const usersRef = collection(firestore, "users");
-  const queryUser = query(usersRef);
+    const usersRef = collection(firestore, "users");
+    const queryUser = query(usersRef);
 
-  try {
-    const querySnapshot = await getDocs(queryUser);
-    let users = [];
-    querySnapshot.forEach((docs) => users.push(docs.data()));
-    return users;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const querySnapshot = await getDocs(queryUser);
+        let users = [];
+        querySnapshot.forEach((docs) => users.push(docs.data()));
+        return users;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const createUser = async (
-  username,
-  location,
-  authorisedUserId,
-  selectedImage
+    username,
+    location,
+    authorisedUserId,
+    selectedImage
 ) => {
-  try {
-    const users = await getAllUsers();
-    if (
-      users.filter((user) => {
-        return username === user.username;
-      }).length > 0
-    ) {
-      throw new Error("Sorry, that username already exists");
-    }
+    try {
+        const users = await getAllUsers();
+        if (
+            users.filter((user) => {
+                return username === user.username;
+            }).length > 0
+        ) {
+            throw new Error("Sorry, that username already exists");
+        }
 
-    await setDoc(
-      doc(firestore, "users", authorisedUserId),
-      {
-        uid: authorisedUserId,
-        username,
-        location,
-        selectedImage,
-        successfulSwaps: 0,
-        rating: 0,
-        dateJoined: new Date(Date.now()),
-      },
-      { merge: true }
-    );
-  } catch (err) {
-    Alert.alert("Error", "That username already exists!", [
-      { text: "OK", style: "cancel" },
-    ]);
-  }
+        await setDoc(
+            doc(firestore, "users", authorisedUserId),
+            {
+                uid: authorisedUserId,
+                username,
+                location,
+                selectedImage,
+                successfulSwaps: 0,
+                rating: 0,
+                dateJoined: new Date(Date.now()),
+            },
+            { merge: true }
+        );
+    } catch (err) {
+        Alert.alert("Error", "That username already exists!", [
+            { text: "OK", style: "cancel" },
+        ]);
+    }
+};
+
+export const addBook = async ({ volumeInfo, id }) => {
+    const utcStr = new Date().toUTCString();
+
+    const shortDescription = volumeInfo.description
+        .split(" ")
+        .slice(0, 30)
+        .join(" ")
+        .concat("...");
+
+    const isbn = volumeInfo.industryIdentifiers.filter((item) => {
+        return item.type === "ISBN_10";
+    });
+
+    try {
+        await setDoc(doc(firestore, "books", id), {
+            title: volumeInfo.title,
+            author: volumeInfo.authors[0],
+            category: volumeInfo.categories[0],
+            longDescription: volumeInfo.description,
+            isbn: isbn[0].identifier,
+            coverImageUri: volumeInfo.imageLinks.thumbnail,
+            dateAdd: utcStr,
+            shortDescription,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
+    const isbn = volumeInfo.industryIdentifiers.filter((item) => {
+        return item.type === "ISBN_10";
+    });
+    try {
+        const refDoc = await addDoc(collection(firestore, "swaps"), {
+            condition,
+            isbn: isbn[0].identifier,
+            offeredBy: authorisedUserId,
+            requestedBy: "",
+            status: "available",
+        });
+        const updateDocRef = doc(firestore, "swaps", refDoc.id);
+        updateDoc(updateDocRef, { swapId: refDoc.id });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const addBook = async ({ volumeInfo, id }) => {
@@ -111,19 +160,19 @@ export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
 };
 
 export const updateUser = async (
-  username,
-  location,
-  authorisedUserId,
-  selectedImage
+    username,
+    location,
+    authorisedUserId,
+    selectedImage
 ) => {
-  const userRef = doc(firestore, "users", authorisedUserId);
+    const userRef = doc(firestore, "users", authorisedUserId);
 
-  let updatedInfo = {};
-  username ? (updatedInfo.username = username) : null;
-  location ? (updatedInfo.location = location) : null;
-  selectedImage ? (updatedInfo.selectedImage = selectedImage) : null;
+    let updatedInfo = {};
+    username ? (updatedInfo.username = username) : null;
+    location ? (updatedInfo.location = location) : null;
+    selectedImage ? (updatedInfo.selectedImage = selectedImage) : null;
 
-  updateDoc(userRef, updatedInfo);
+    updateDoc(userRef, updatedInfo);
 };
 
 export const getBooks = async (searchText) => {
@@ -153,53 +202,53 @@ export const getBooks = async (searchText) => {
 };
 
 export const getSwapsByIsbn = async (isbn) => {
-  const swapsRef = collection(firestore, "swaps");
-  const querySwap = query(
-    swapsRef,
-    where("isbn", "==", isbn),
-    where("status", "==", "available")
-  );
-  try {
-    const querySnapshot = await getDocs(querySwap);
-    let swaps = [];
-    querySnapshot.forEach((docs) => swaps.push(docs.data()));
-    return swaps;
-  } catch (err) {
-    console.log(err);
-  }
+    const swapsRef = collection(firestore, "swaps");
+    const querySwap = query(
+        swapsRef,
+        where("isbn", "==", isbn),
+        where("status", "==", "available")
+    );
+    try {
+        const querySnapshot = await getDocs(querySwap);
+        let swaps = [];
+        querySnapshot.forEach((docs) => swaps.push(docs.data()));
+        return swaps;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const getBookByIsbn = async (isbn) => {
-  const booksRef = collection(firestore, "books");
-  const queryBooks = query(booksRef, where("isbn", "==", isbn));
-  try {
-    const querySnapshot = await getDocs(queryBooks);
-    let books = [];
-    querySnapshot.forEach((docs) => books.push(docs.data()));
-    return books[0];
-  } catch (err) {
-    console.log(err);
-  }
+    const booksRef = collection(firestore, "books");
+    const queryBooks = query(booksRef, where("isbn", "==", isbn));
+    try {
+        const querySnapshot = await getDocs(queryBooks);
+        let books = [];
+        querySnapshot.forEach((docs) => books.push(docs.data()));
+        return books[0];
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const updateSwapById = async (swapId, uid) => {
-  const swapRef = doc(firestore, "swaps", swapId);
-  updateDoc(swapRef, { status: "requested", requestedBy: uid });
+    const swapRef = doc(firestore, "swaps", swapId);
+    updateDoc(swapRef, { status: "requested", requestedBy: uid });
 };
 
 export const getSwapsByUserID = async (uid) => {
-  const swapsRef = collection(firestore, "swaps");
-  const queryUser = query(swapsRef, where("offeredBy", "==", uid));
+    const swapsRef = collection(firestore, "swaps");
+    const queryUser = query(swapsRef, where("offeredBy", "==", uid));
 
-  try {
-    const querySnapshot = await getDocs(queryUser);
-    let books = [];
-    querySnapshot.forEach((docs) => books.push(docs.data()));
-    const currentUser = books;
-    return currentUser;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const querySnapshot = await getDocs(queryUser);
+        let books = [];
+        querySnapshot.forEach((docs) => books.push(docs.data()));
+        const currentUser = books;
+        return currentUser;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const getMessages = async (swapId) => {
