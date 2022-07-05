@@ -8,7 +8,7 @@ import {
     Alert,
     TouchableOpacity
 } from "react-native";
-import { useEffect, useState, useContext, useLayoutEffect } from "react";
+import { useState, useContext, useLayoutEffect } from "react";
 import {
     getSwapsByIsbn,
     getUserByUid,
@@ -101,7 +101,6 @@ export default function SingleBookScreen({route, navigation}) {
                         <Text>Condition: {item.condition}</Text>
                         <Text>Rating: {item.rating}</Text>
                         <Button title="Request this book" onPress={() => {handleRequest(item.swapId)}}/>
-                        <Button title="Start chat" onPress={() => navigation.navigate("Chat", {swapId: item.swapId })}></Button>
                     </ScrollView>
                 )}
             />

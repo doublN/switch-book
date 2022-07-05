@@ -1,8 +1,5 @@
 import { useState, useContext, useLayoutEffect } from 'react';
-import {
-  GiftedChat,
-  Bubble,
-} from 'react-native-gifted-chat';
+import { GiftedChat } from 'react-native-gifted-chat';
 import { Button, View, Text } from "react-native"
 import UserContext from "../Contexts/UserContext";
 import { getMessages, addMessage } from '../Utils/dbQueries';
@@ -12,7 +9,7 @@ export default function ChatScreen({route, navigation}) {
           {
             _id: 1,
             text: 'Please stay safe when arranging to swap books. Contact us to report any inappropriate behaviour',
-            createdAt: new Date(Date.now() - 24*60*60*1000),
+            createdAt: 1657018269508,
             user: {
               _id: 2,
               name: 'Team Switch Book 📚',
@@ -20,7 +17,7 @@ export default function ChatScreen({route, navigation}) {
             },
           },
         ]);
-  const { swapId } = route.params;
+  const { swapId, title, offeredBy } = route.params;
   const { currentUser } = useContext(UserContext);
   
   async function fetchMessages() {
@@ -39,7 +36,6 @@ export default function ChatScreen({route, navigation}) {
       const text = messages[0].text;
       addMessage(swapId, currentUser, text);
       fetchMessages();
-
   }
 
   useLayoutEffect(() => {
@@ -48,21 +44,22 @@ export default function ChatScreen({route, navigation}) {
 
   return (
     <>
-    <Text style={{textAlign: 'center', paddingTop: 10}}>The book title will go here</Text>
-    <View style={{ flexDirection: 'row', justifyContent: 'center'}}>
-      <Button title="Mark swap as complete"/>
-      <Button title="Cancel swap"/>
-    </View>
-    <GiftedChat
-      messages={messages}
-      onSend={handleSend}
-      user={{ _id: currentUser.uid }}
-      placeholder='Type your message here...'
-      alwaysShowSend
-      renderUsernameOnMessage
-      // renderBubble={renderBubble}
-    />
-    
+      <View style={{paddingTop: 15, paddingBottom: 15}}>
+        <Text style={{textAlign: 'center'}}>{title}</Text>
+        <Text style={{textAlign: 'center'}}>Offered by {offeredBy}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'center'}}>
+        <Button title="Mark swap as complete"/>
+        <Button title="Cancel swap"/>
+      </View>
+      <GiftedChat
+        messages={messages}
+        onSend={handleSend}
+        user={{ _id: currentUser.uid }}
+        placeholder='Type your message here...'
+        alwaysShowSend
+        renderUsernameOnMessage
+      />
     </>
   );
 }
