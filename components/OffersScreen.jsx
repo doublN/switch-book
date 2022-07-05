@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Image, StyleSheet, Pressable, Button } from 'react-native'
 import React, { useEffect, useContext, useLayoutEffect, useState } from 'react'
 import UserContext from '../Contexts/UserContext'
-import { getSwapsByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
+import { getOffersByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
 
 export default function OffersScreen({navigation}) {
     const {currentUser} = useContext(UserContext);
@@ -11,7 +11,7 @@ export default function OffersScreen({navigation}) {
     useLayoutEffect(() => {
         setShouldUpdate(false);
         async function getUserOffers(){
-            const swaps = await getSwapsByUserID(currentUser.uid);
+            const swaps = await getOffersByUserID(currentUser.uid);
             const userBooks = await Promise.all(swaps.map((swap) => getBookByIsbn(swap.isbn)))
             const offered = []
             for(let i = 0; i < swaps.length; i++){
@@ -33,9 +33,9 @@ export default function OffersScreen({navigation}) {
     }
 
     return (
-        <FlatList data={offeredBooks} renderItem={({item}) =>
+        <FlatList style={styles.view} data={offeredBooks} renderItem={({item}) =>
             <View style={styles.list}>
-                <Image style={{ resizeMode: "contain", height: 100, width: 100 }} source={{ uri: item.coverImageUri }}/>
+                <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
                 <Text style={styles.body}>{item.title} by {item.author}</Text>
                 <Text style={styles.body}>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
                 {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: currentUser.username })}></Button>: null}
@@ -48,6 +48,11 @@ export default function OffersScreen({navigation}) {
 }
 
 const styles=StyleSheet.create({
+    view:{
+        backgroundColor:"#aaaaaa",
+        fontFamily:"Avenir",
+        fontSize: 15,
+      },
     list: {
         flex: 1,
         justifyContent: "center",
@@ -77,4 +82,11 @@ const styles=StyleSheet.create({
         elevation: 3,
         backgroundColor: "#dddddd",
     },
+    image:{
+        resizeMode: "contain",
+        height: 200,
+        width: 200,
+        justifyContent: "center",
+        alignItems: "center",
+      },
 })
