@@ -3,7 +3,7 @@ import React, { useEffect, useContext, useLayoutEffect, useState } from 'react'
 import UserContext from '../Contexts/UserContext'
 import { getSwapsByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
 
-export default function OffersScreen() {
+export default function OffersScreen({navigation}) {
     const {currentUser} = useContext(UserContext);
     const [offeredBooks, setOfferedBooks] = useState([]);
     const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -38,7 +38,7 @@ export default function OffersScreen() {
                 <Image style={{ resizeMode: "contain", height: 100, width: 100 }} source={{ uri: item.coverImageUri }}/>
                 <Text>{item.title} by {item.author}</Text>
                 <Text>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
-                {item.status === "accepted" || item.status === "requested" ? <Button title="Go to chat" /> : null}
+                {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: currentUser.username })}></Button>: null}
                 {item.status === "requested" ? <Button title="Deny Request" onPress={() => {handleDenyRequest(item.swapId)}} /> : <Button title="Remove offer" onPress={() => handleRemoveOffer(item.swapId)}/>}
                 {item.status === "completed" ? <Button title="Rate transaction" /> : null}
             </View>

@@ -246,3 +246,7 @@ export const addMessage = async (swapId, currentUser, text) => {
     console.log(err);
   }
 };
+
+export const updateSwapCountByIsbn = async (isbn) =>{
+  
+}
