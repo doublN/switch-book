@@ -66,13 +66,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#dddddd",
+    backgroundColor: "#eeeeee",
   },
   icons: {
     marginTop: 30,
     flexDirection: "row",
     justifyContent: 'space-between',
-  },
+     },
   imageFp: {
     marginBottom: 100,
     height: 280,
@@ -81,18 +81,17 @@ const styles = StyleSheet.create({
   },
   title:{
     fontFamily:"Avenir",
-    fontSize: 30,
+    fontSize: 33,
     fontWeight: "bold",
     marginBottom: 24,
     textAlign: "center",
-    color: "#423034",
-
+    color: "#333333",
       },
   body:{
     fontFamily:"Avenir",
     fontSize: 15,
     textAlign: "center",
-    color: "#423034",
+    color: "#333333",
       }
 });
 

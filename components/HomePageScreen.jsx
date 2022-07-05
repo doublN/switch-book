@@ -87,12 +87,6 @@ const HomePageScreen = ({navigation, clicked, setCLicked}) => {
 };
 
 const styles = StyleSheet.create({
-  text:{
-      fontFamily:"Avenir",
-      fontSize: 15,
-      textAlign: "center",
-      color: "#423034"
-  },
   searchBar: {
     fontSize: 15,
     marginLeft: 10,
