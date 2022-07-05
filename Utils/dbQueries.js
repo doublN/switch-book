@@ -11,6 +11,7 @@ import {
   doc,
   orderBy,
   collection,
+  deleteDoc,
 } from "firebase/firestore";
 import { Alert } from "react-native";
 import { firestore } from "./firebase";
@@ -231,10 +232,17 @@ export const getBookByIsbn = async (isbn) => {
     }
 };
 
-export const updateSwapById = async (swapId, uid) => {
-    const swapRef = doc(firestore, "swaps", swapId);
-    updateDoc(swapRef, { status: "requested", requestedBy: uid });
+export const updateSwapById = async (swapId, requestedUid, status) => {
+  const swapRef = doc(firestore, "swaps", swapId);
+  let updateObj = {};
+  requestedUid ? (updateObj.requestedBy = requestedUid) : null;
+  status ? (updateObj.status = status) : null;
+  updateDoc(swapRef, updateObj);
 };
+
+export const deleteSwapById = async(swapId) =>{
+  await deleteDoc(doc(firestore, "swaps", swapId))
+}
 
 export const getSwapsByUserID = async (uid) => {
     const swapsRef = collection(firestore, "swaps");
@@ -290,6 +298,6 @@ export const addMessage = async (swapId, currentUser, text) => {
   }
 };
 
-//AddBook requires a field called swapId that is unique
-//needs to check if isbn is in books, if not add it
-//needs to add a record to swaps with swapId etc
+export const updateSwapCountByIsbn = async (isbn) =>{
+  
+}

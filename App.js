@@ -15,7 +15,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateProfileScreen from "./components/CreateProfileScreen";
 import AddABookScreen from "./components/AddABookScreen";
-import { OfferBookScreen } from "./components/OfferBookScreen";
+
 //Navigation
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
