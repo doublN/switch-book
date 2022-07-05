@@ -1,31 +1,32 @@
 import { async } from "@firebase/util";
+import { createdAt } from "expo-updates";
 import {
-    query,
-    where,
-    getDoc,
-    getDocs,
-    setDoc,
-    updateDoc,
-    doc,
-    orderBy,
-    collection,
+  query,
+  where,
+  addDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  doc,
+  orderBy,
+  collection,
 } from "firebase/firestore";
 import { Alert } from "react-native";
 import { firestore } from "./firebase";
 
 export const getUserByUid = async (uid) => {
-    const usersRef = collection(firestore, "users");
-    const queryUser = query(usersRef, where("uid", "==", uid));
+  const usersRef = collection(firestore, "users");
+  const queryUser = query(usersRef, where("uid", "==", uid));
 
-    try {
-        const querySnapshot = await getDocs(queryUser);
-        let users = [];
-        querySnapshot.forEach((docs) => users.push(docs.data()));
-        const currentUser = users[0];
-        return currentUser;
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    const querySnapshot = await getDocs(queryUser);
+    let users = [];
+    querySnapshot.forEach((docs) => users.push(docs.data()));
+    const currentUser = users[0];
+    return currentUser;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const getAllUsers = async () => {
@@ -79,34 +80,34 @@ export const createUser = async (
 };
 
 export const addBook = async ({ volumeInfo, id }) => {
-    try {
-        await setDoc(doc(firestore, "books", id), {
-            title: volumeInfo.title,
-            author: volumeInfo.authors[0],
-            category: volumeInfo.categories[0],
-            description: volumeInfo.description,
-            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
-            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
-            thumbnail: volumeInfo.imageLinks.thumbnail,
-            date_published: volumeInfo.publishedDate,
-        });
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    await setDoc(doc(firestore, "books", id), {
+      title: volumeInfo.title,
+      author: volumeInfo.authors[0],
+      category: volumeInfo.categories[0],
+      description: volumeInfo.description,
+      ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+      ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+      thumbnail: volumeInfo.imageLinks.thumbnail,
+      date_published: volumeInfo.publishedDate,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
-    try {
-        await setDoc(doc(collection(firestore, "swaps")), {
-            condition,
-            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
-            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
-            offeredBy: authorisedUserId,
-            status: "available",
-        });
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    await setDoc(doc(collection(firestore, "swaps")), {
+      condition,
+      ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+      ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+      offeredBy: authorisedUserId,
+      status: "available",
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const updateUser = async (
@@ -126,35 +127,29 @@ export const updateUser = async (
 };
 
 export const getBooks = async (searchText) => {
-    const booksRef = collection(firestore, "books");
-    const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
+  const booksRef = collection(firestore, "books");
+  const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
 
-    try {
-        const querySnapshot = await getDocs(queryBooks);
-        let books = [];
-        querySnapshot.forEach((docs) => books.push(docs.data()));
+  try {
+    const querySnapshot = await getDocs(queryBooks);
+    let books = [];
+    querySnapshot.forEach((docs) => books.push(docs.data()));
 
-        if (searchText) {
-            const filteredBooks = books.filter((book) => {
-                return (
-                    book.title
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase()) ||
-                    book.author
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase()) ||
-                    book.category
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase())
-                );
-            });
-            return filteredBooks;
-        }
-
-        return books;
-    } catch (err) {
-        console.log(err);
+    if (searchText) {
+      const filteredBooks = books.filter((book) => {
+        return (
+          book.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchText.toLowerCase()) ||
+          book.category.toLowerCase().includes(searchText.toLowerCase())
+        );
+      });
+      return filteredBooks;
     }
+
+    return books;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getSwapsByIsbn = async (isbn) => {
@@ -209,7 +204,11 @@ export const getSwapsByUserID = async (uid) => {
 
 export const getMessages = async (swapId) => {
   const messagesRef = collection(firestore, "chats");
-  const queryMessages = query(messagesRef, where("swapId", "==", swapId));
+  const queryMessages = query(
+    messagesRef,
+    where("swapId", "==", swapId),
+    orderBy("createdAt", "desc")
+  );
   try {
     const querySnapshot = await getDocs(queryMessages);
     let messages = [];
@@ -225,11 +224,14 @@ export const addMessage = async (swapId, currentUser, text) => {
     await addDoc(
       collection(firestore, "chats"),
       {
+        _id: swapId + (Math.random() + 1).toString(36).substring(7),
         swapId,
         text,
         createdAt: new Date().getTime(),
         user: {
           _id: currentUser.uid,
+          avatar: currentUser.selectedImage,
+          name: currentUser.username,
         },
       },
       { merge: true }
