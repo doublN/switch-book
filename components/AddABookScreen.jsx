@@ -29,7 +29,7 @@ export default function AddABookScreen({ navigation }) {
         { label: "Boxed edges", value: "Boxed-edges" },
     ]);
     const [selectedBook, setSelectedBook] = useState([]);
-    const { authorisedUser, setCurrentUser } = useContext(UserContext);
+    const { authorisedUser, setCurrentUser, setShouldUpdateOffers } = useContext(UserContext);
 
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=${passSearchText}`)
@@ -75,6 +75,7 @@ export default function AddABookScreen({ navigation }) {
         addBook(selectedBook, value);
         addSwap(value, selectedBook, authorisedUser.uid);
         navigation.navigate("Home")
+        setShouldUpdateOffers(true);
     };
 
     return (

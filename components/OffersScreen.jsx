@@ -4,12 +4,12 @@ import UserContext from '../Contexts/UserContext'
 import { getOffersByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
 
 export default function OffersScreen({navigation}) {
-    const {currentUser} = useContext(UserContext);
+    const {currentUser, shouldUpdateOffers, setShouldUpdateOffers} = useContext(UserContext);
     const [offeredBooks, setOfferedBooks] = useState([]);
-    const [shouldUpdate, setShouldUpdate] = useState(false);
+    console.log(shouldUpdateOffers);
 
     useLayoutEffect(() => {
-        setShouldUpdate(false);
+        setShouldUpdateOffers(false);
         async function getUserOffers(){
             const swaps = await getOffersByUserID(currentUser.uid);
             const userBooks = await Promise.all(swaps.map((swap) => getBookByIsbn(swap.isbn)))
@@ -20,16 +20,16 @@ export default function OffersScreen({navigation}) {
             setOfferedBooks(offered);
         }
         getUserOffers();
-    }, [shouldUpdate])
+    }, [shouldUpdateOffers])
 
     async function handleRemoveOffer(swapId){
         await deleteSwapById(swapId);
-        setShouldUpdate(true);
+        setShouldUpdateOffers(true);
     }
 
     async function handleDenyRequest(swapId){
         await updateSwapById(swapId, null, "available");
-        setShouldUpdate(true);
+        setShouldUpdateOffers(true);
     }
 
     return (
