@@ -48,7 +48,7 @@ export default function SingleBookScreen({
     }, [request]);
 
     function handleRequest(swapId) {
-        updateSwapById(swapId, currentUser.uid)
+        updateSwapById(swapId, currentUser.uid, "requested")
             .then(() => {
                 Alert.alert(
                     "Request sent!",
