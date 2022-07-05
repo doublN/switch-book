@@ -18,6 +18,7 @@ export default function OffersScreen({navigation}) {
                 offered.push({...swaps[i], ...userBooks[i]})
             }
             setOfferedBooks(offered);
+            console.log(offered);
         }
         getUserOffers();
     }, [shouldUpdate])
