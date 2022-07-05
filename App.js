@@ -25,6 +25,7 @@ export default function App() {
     // currentUser = user in our firestore database
     const [authorisedUser] = useAuthState(auth);
     const [currentUser, setCurrentUser] = useState(null);
+    const [shouldUpdateOffers, setShouldUpdateOffers] = useState(false);
 
     useEffect(() => {
         // set currentUser (available to all components via context)
@@ -48,7 +49,7 @@ export default function App() {
   } else {
     return (
       <UserContext.Provider
-        value={{ currentUser, authorisedUser, setCurrentUser, auth }}
+        value={{ currentUser, authorisedUser, setCurrentUser, auth, shouldUpdateOffers, setShouldUpdateOffers }}
       >
         <NavigationContainer>
           <Stack.Navigator>
