@@ -1,94 +1,108 @@
 import { async } from "@firebase/util";
+import { createdAt } from "expo-updates";
 import {
-    query,
-    where,
-    getDoc,
-    getDocs,
-    setDoc,
-    updateDoc,
-    doc,
-    orderBy,
-    collection,
+  query,
+  where,
+  addDoc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  doc,
+  orderBy,
+  collection,
 } from "firebase/firestore";
 import { Alert } from "react-native";
 import { firestore } from "./firebase";
 
 export const getUserByUid = async (uid) => {
-    const usersRef = collection(firestore, "users");
-    const queryUser = query(usersRef, where("uid", "==", uid));
-
-    try {
-        const querySnapshot = await getDocs(queryUser);
-        let users = [];
-        querySnapshot.forEach((docs) => users.push(docs.data()));
-        const currentUser = users[0];
-        return currentUser;
-    } catch (err) {
-        console.log(err);
-    }
-};
-
-const getAllUsers = async () => {
   const usersRef = collection(firestore, "users");
-  const queryUser = query(usersRef);
+  const queryUser = query(usersRef, where("uid", "==", uid));
 
   try {
     const querySnapshot = await getDocs(queryUser);
     let users = [];
     querySnapshot.forEach((docs) => users.push(docs.data()));
-    return users;
+    const currentUser = users[0];
+    return currentUser;
   } catch (err) {
     console.log(err);
   }
 };
 
-export const createUser = async (
-  username,
-  location,
-  authorisedUserId,
-  selectedImage
-) => {
-  try {
-    const users = await getAllUsers();
-    if (
-      users.filter((user) => {
-        return username === user.username;
-      }).length > 0
-    ) {
-      throw new Error("Sorry, that username already exists");
-    }
+const getAllUsers = async () => {
+    const usersRef = collection(firestore, "users");
+    const queryUser = query(usersRef);
 
-    await setDoc(
-      doc(firestore, "users", authorisedUserId),
-      {
-        uid: authorisedUserId,
-        username,
-        location,
-        selectedImage,
-        successfulSwaps: 0,
-        rating: 0,
-        dateJoined: new Date(Date.now()),
-      },
-      { merge: true }
-    );
-  } catch (err) {
-    Alert.alert("Error", "That username already exists!", [
-      { text: "OK", style: "cancel" },
-    ]);
-  }
+    try {
+        const querySnapshot = await getDocs(queryUser);
+        let users = [];
+        querySnapshot.forEach((docs) => users.push(docs.data()));
+        return users;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const createUser = async (
+    username,
+    location,
+    authorisedUserId,
+    selectedImage
+) => {
+    try {
+        const users = await getAllUsers();
+        if (
+            users.filter((user) => {
+                return username === user.username;
+            }).length > 0
+        ) {
+            throw new Error("Sorry, that username already exists");
+        }
+
+        await setDoc(
+            doc(firestore, "users", authorisedUserId),
+            {
+                uid: authorisedUserId,
+                username,
+                location,
+                selectedImage,
+                successfulSwaps: 0,
+                rating: 0,
+                dateJoined: new Date(Date.now()),
+            },
+            { merge: true }
+        );
+    } catch (err) {
+        Alert.alert("Error", "That username already exists!", [
+            { text: "OK", style: "cancel" },
+        ]);
+    }
 };
 
 export const addBook = async ({ volumeInfo, id }) => {
+    const utcStr = new Date().toUTCString();
+
+    const shortDescription = volumeInfo.description
+        .split(" ")
+        .slice(0, 30)
+        .join(" ")
+        .concat("...");
+
+    const isbn = volumeInfo.industryIdentifiers.filter((item) => {
+        return item.type === "ISBN_10";
+    });
+
     try {
         await setDoc(doc(firestore, "books", id), {
             title: volumeInfo.title,
             author: volumeInfo.authors[0],
             category: volumeInfo.categories[0],
-            description: volumeInfo.description,
-            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
-            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
-            thumbnail: volumeInfo.imageLinks.thumbnail,
-            date_published: volumeInfo.publishedDate,
+            longDescription: volumeInfo.description,
+            isbn: isbn[0].identifier,
+            coverImageUri: volumeInfo.imageLinks.thumbnail,
+            dateAdd: utcStr,
+            shortDescription,
         });
     } catch (err) {
         console.log(err);
@@ -96,120 +110,154 @@ export const addBook = async ({ volumeInfo, id }) => {
 };
 
 export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
+    const isbn = volumeInfo.industryIdentifiers.filter((item) => {
+        return item.type === "ISBN_10";
+    });
     try {
-        await setDoc(doc(collection(firestore, "swaps")), {
+        const refDoc = await addDoc(collection(firestore, "swaps"), {
             condition,
-            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
-            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+            isbn: isbn[0].identifier,
             offeredBy: authorisedUserId,
+            requestedBy: "",
             status: "available",
         });
+        const updateDocRef = doc(firestore, "swaps", refDoc.id);
+        updateDoc(updateDocRef, { swapId: refDoc.id });
     } catch (err) {
         console.log(err);
     }
 };
 
-export const updateUser = async (
-  username,
-  location,
-  authorisedUserId,
-  selectedImage
-) => {
-  const userRef = doc(firestore, "users", authorisedUserId);
-
-  let updatedInfo = {};
-  username ? (updatedInfo.username = username) : null;
-  location ? (updatedInfo.location = location) : null;
-  selectedImage ? (updatedInfo.selectedImage = selectedImage) : null;
-
-  updateDoc(userRef, updatedInfo);
-};
-
-export const getBooks = async (searchText) => {
-    const booksRef = collection(firestore, "books");
-    const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
-
-    try {
-        const querySnapshot = await getDocs(queryBooks);
-        let books = [];
-        querySnapshot.forEach((docs) => books.push(docs.data()));
-
-        if (searchText) {
-            const filteredBooks = books.filter((book) => {
-                return (
-                    book.title
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase()) ||
-                    book.author
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase()) ||
-                    book.category
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase())
-                );
-            });
-            return filteredBooks;
-        }
-
-        return books;
-    } catch (err) {
-        console.log(err);
-    }
-};
-
-export const getSwapsByIsbn = async (isbn) => {
-  const swapsRef = collection(firestore, "swaps");
-  const querySwap = query(
-    swapsRef,
-    where("isbn", "==", isbn),
-    where("status", "==", "available")
-  );
+export const addBook = async ({ volumeInfo, id }) => {
   try {
-    const querySnapshot = await getDocs(querySwap);
-    let swaps = [];
-    querySnapshot.forEach((docs) => swaps.push(docs.data()));
-    return swaps;
+    await setDoc(doc(firestore, "books", id), {
+      title: volumeInfo.title,
+      author: volumeInfo.authors[0],
+      category: volumeInfo.categories[0],
+      description: volumeInfo.description,
+      ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+      ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+      thumbnail: volumeInfo.imageLinks.thumbnail,
+      date_published: volumeInfo.publishedDate,
+    });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const getBookByIsbn = async (isbn) => {
+export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
+  try {
+    await setDoc(doc(collection(firestore, "swaps")), {
+      condition,
+      ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+      ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+      offeredBy: authorisedUserId,
+      status: "available",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateUser = async (
+    username,
+    location,
+    authorisedUserId,
+    selectedImage
+) => {
+    const userRef = doc(firestore, "users", authorisedUserId);
+
+    let updatedInfo = {};
+    username ? (updatedInfo.username = username) : null;
+    location ? (updatedInfo.location = location) : null;
+    selectedImage ? (updatedInfo.selectedImage = selectedImage) : null;
+
+    updateDoc(userRef, updatedInfo);
+};
+
+export const getBooks = async (searchText) => {
   const booksRef = collection(firestore, "books");
-  const queryBooks = query(booksRef, where("isbn", "==", isbn));
+  const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
+
   try {
     const querySnapshot = await getDocs(queryBooks);
     let books = [];
     querySnapshot.forEach((docs) => books.push(docs.data()));
-    return books[0];
+
+    if (searchText) {
+      const filteredBooks = books.filter((book) => {
+        return (
+          book.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchText.toLowerCase()) ||
+          book.category.toLowerCase().includes(searchText.toLowerCase())
+        );
+      });
+      return filteredBooks;
+    }
+
+    return books;
   } catch (err) {
     console.log(err);
   }
+};
+
+export const getSwapsByIsbn = async (isbn) => {
+    const swapsRef = collection(firestore, "swaps");
+    const querySwap = query(
+        swapsRef,
+        where("isbn", "==", isbn),
+        where("status", "==", "available")
+    );
+    try {
+        const querySnapshot = await getDocs(querySwap);
+        let swaps = [];
+        querySnapshot.forEach((docs) => swaps.push(docs.data()));
+        return swaps;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const getBookByIsbn = async (isbn) => {
+    const booksRef = collection(firestore, "books");
+    const queryBooks = query(booksRef, where("isbn", "==", isbn));
+    try {
+        const querySnapshot = await getDocs(queryBooks);
+        let books = [];
+        querySnapshot.forEach((docs) => books.push(docs.data()));
+        return books[0];
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const updateSwapById = async (swapId, uid) => {
-  const swapRef = doc(firestore, "swaps", swapId);
-  updateDoc(swapRef, { status: "requested", requestedBy: uid });
+    const swapRef = doc(firestore, "swaps", swapId);
+    updateDoc(swapRef, { status: "requested", requestedBy: uid });
 };
 
 export const getSwapsByUserID = async (uid) => {
-  const swapsRef = collection(firestore, "swaps");
-  const queryUser = query(swapsRef, where("offeredBy", "==", uid));
+    const swapsRef = collection(firestore, "swaps");
+    const queryUser = query(swapsRef, where("offeredBy", "==", uid));
 
-  try {
-    const querySnapshot = await getDocs(queryUser);
-    let books = [];
-    querySnapshot.forEach((docs) => books.push(docs.data()));
-    const currentUser = books;
-    return currentUser;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const querySnapshot = await getDocs(queryUser);
+        let books = [];
+        querySnapshot.forEach((docs) => books.push(docs.data()));
+        const currentUser = books;
+        return currentUser;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const getMessages = async (swapId) => {
   const messagesRef = collection(firestore, "chats");
-  const queryMessages = query(messagesRef, where("swapId", "==", swapId));
+  const queryMessages = query(
+    messagesRef,
+    where("swapId", "==", swapId),
+    orderBy("createdAt", "desc")
+  );
   try {
     const querySnapshot = await getDocs(queryMessages);
     let messages = [];
@@ -225,11 +273,14 @@ export const addMessage = async (swapId, currentUser, text) => {
     await addDoc(
       collection(firestore, "chats"),
       {
+        _id: swapId + (Math.random() + 1).toString(36).substring(7),
         swapId,
         text,
         createdAt: new Date().getTime(),
         user: {
           _id: currentUser.uid,
+          avatar: currentUser.selectedImage,
+          name: currentUser.username,
         },
       },
       { merge: true }

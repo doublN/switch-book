@@ -1,5 +1,4 @@
 import {
-
     View,
     Text,
     TextInput,
@@ -70,6 +69,9 @@ export default function AddABookScreen({ navigation }) {
     };
 
     const handleAddBook_and_Sawp = () => {
+        if (value === null || value === false) {
+            alert("Please describe book's condition");
+        }
         addBook(selectedBook, value);
         addSwap(value, selectedBook, authorisedUser.uid);
     };

@@ -4,9 +4,11 @@ import {
     Button,
     FlatList,
     ScrollView,
-    Alert, StyleSheet
+    Alert,
+    StyleSheet,
+    TouchableOpacity
 } from "react-native";
-import { useEffect, useState, useContext, useLayoutEffect } from "react";
+import { useState, useContext, useLayoutEffect } from "react";
 import {
     getSwapsByIsbn,
     getUserByUid,
@@ -14,12 +16,9 @@ import {
 } from "../Utils/dbQueries";
 import UserContext from "../Contexts/UserContext";
 
-export default function SingleBookScreen({
-    navigation,
-    route: {
-        params: { book },
-    },
-}) {
+
+export default function SingleBookScreen({route, navigation}) {
+    const { book } = route.params;
     const [offerInfo, setOfferInfo] = useState([]);
     const [request, setRequest] = useState(false);
     const { currentUser } = useContext(UserContext);
@@ -88,18 +87,16 @@ export default function SingleBookScreen({
                 data={offerInfo}
                 renderItem={({ item }) => (
                     <ScrollView style={styles.ScrollView}>
+                        <TouchableOpacity onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy })}>
+                            <Image style={{resizeMode:'contain', height: 100, width : 100, borderRadius: 100}} source={{uri : item.selectedImage}}/>
+                        </TouchableOpacity>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.body}>Offered by: </Text>
+                            <Text style={styles.body} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy })}>{item.username}</Text>
+                        </View>
                         <Text style={styles.body}>Condition: {item.condition}</Text>
-                        <Text style={styles.body}>Offered by: {item.username}</Text>
-                        <Text style={styles.body}>Location: {item.location}</Text>
                         <Text style={styles.body}>Rating: {item.rating}</Text>
-                        <Text style={styles.body}>Successful swaps: {item.successfulSwaps}</Text>
-                        <Text style={styles.body}>{item.swapId}</Text>
-                        <Button
-                            title="Request this book"
-                            onPress={() => {
-                                handleRequest(item.swapId);
-                            }}
-                        />
+                        <Button title="Request this book" onPress={() => {handleRequest(item.swapId)}}/>
                     </ScrollView>
                 )}
             />
