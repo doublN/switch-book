@@ -26,10 +26,10 @@ const BookList = ({ books, navigation }) => {
               style={{ resizeMode: "contain", height: 200, width: 100}}
               source={{ uri: item.coverImageUri }}
               />
-            <Text>
+            <Text style={styles.body}>
               {item.title} by {item.author}
             </Text>
-            <Text>{item.shortDescription}</Text>
+            <Text style={styles.body}>{item.shortDescription}</Text>
               </View>
           </Pressable>
         )}
@@ -40,7 +40,7 @@ const BookList = ({ books, navigation }) => {
 
 const styles = StyleSheet.create({
   view:{
-    // backgroundColor:"#423034",
+    backgroundColor:"#aaaaaa",
     fontFamily:"Avenir",
     fontSize: 15,
   },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#423034",
-    backgroundColor: "#dddddd",
+    backgroundColor: "#eeeeee",
     borderRadius: 30,
   },
   search: {
@@ -73,7 +73,13 @@ const styles = StyleSheet.create({
     width: 300,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
+  body:{
+    fontFamily:"Avenir",
+    fontSize: 15,
+    textAlign: "center",
+    color: "#333333",
+      }
 });
 
 export default BookList;

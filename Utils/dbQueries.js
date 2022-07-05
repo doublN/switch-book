@@ -4,6 +4,7 @@ import {
     query,
     where,
     addDoc,
+    getDoc,
     getDocs,
     setDoc,
     updateDoc,
@@ -122,6 +123,37 @@ export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
         });
         const updateDocRef = doc(firestore, "swaps", refDoc.id);
         updateDoc(updateDocRef, { swapId: refDoc.id });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const addBook = async ({ volumeInfo, id }) => {
+    try {
+        await setDoc(doc(firestore, "books", id), {
+            title: volumeInfo.title,
+            author: volumeInfo.authors[0],
+            category: volumeInfo.categories[0],
+            description: volumeInfo.description,
+            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+            thumbnail: volumeInfo.imageLinks.thumbnail,
+            date_published: volumeInfo.publishedDate,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
+    try {
+        await setDoc(doc(collection(firestore, "swaps")), {
+            condition,
+            ISBN_13: volumeInfo.industryIdentifiers[1].identifier,
+            ISBN_10: volumeInfo.industryIdentifiers[0].identifier,
+            offeredBy: authorisedUserId,
+            status: "available",
+        });
     } catch (err) {
         console.log(err);
     }
@@ -266,4 +298,4 @@ export const addMessage = async (swapId, currentUser, text) => {
 
 //AddBook requires a field called swapId that is unique
 //needs to check if isbn is in books, if not add it
-//needs to add a record to swaps with swapId etc.
+//needs to add a record to swaps with swapId etc

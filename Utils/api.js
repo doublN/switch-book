@@ -1,5 +1,6 @@
-import axios from "axios";
-
-export const googleBooksAPI = axios.create({
-  baseURL: "https://www.googleapis.com/books/v1/volumes?q=jane austen",
-});
+export const googleBookApi = async () => {
+    const res = await fetch(
+        "https://www.googleapis.com/books/v1/volumes?q=jane austen"
+    );
+    return res.volumeInfo.json();
+};
