@@ -7,6 +7,7 @@ import {
     ScrollView,
     Alert,
     TouchableOpacity,
+    Pressable,
 } from "react-native";
 import { useState, useContext, useLayoutEffect } from "react";
 import {
@@ -76,15 +77,28 @@ export default function SingleBookScreen({ route, navigation }) {
             <FlatList
                 ListHeaderComponent={
                     <>
-                    <View style={styles.list}>
-                        <Text style={styles.body}>{book.title} by {book.author}</Text >
-                        <Text style={styles.body}>Category: {book.category}</Text>
-                        <Image
-                         style={styles.image}
-                         source={{ uri: book.coverImageUri }}
-                         />
-                        <Text style={styles.body}>{book.longDescription}</Text>
-                    </View>
+                        <View style={{paddingBottom: 15}}>
+                            <Text style={styles.title}>
+                                {book.title}
+                            </Text >
+                            <Text style={styles.body}>Author: {book.author}</Text>
+                            <Text style={styles.body}>Category: {book.category}</Text>
+                        </View>
+                        <View style={{ alignItems: 'center'}}>
+                            <Image
+                                style={styles.image}
+                                source={{ uri: book.coverImageUri }}
+                            />
+                        </View>
+                        <Text style={styles.desc}>{book.longDescription}</Text>
+                        <View style={{padding: 20}}>
+                            <Pressable style={styles.button}
+                                onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}
+                            >
+                                <Text>Offer this book</Text>
+                            </Pressable>
+                        </View>
+
                     </>
                 }
                 data={offerInfo}
@@ -125,5 +139,6 @@ export default function SingleBookScreen({ route, navigation }) {
         </View>
     );
 }
+
 
 
