@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#dddddd",
     },
     imageFp: {
-        marginTop: "auto",
+        marginTop: 20,
         marginBottom: "auto",
         marginLeft: "auto",
         marginRight: "auto",
