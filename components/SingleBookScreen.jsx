@@ -8,6 +8,7 @@ import {
     Alert,
     StyleSheet,
     TouchableOpacity,
+    Pressable,
 } from "react-native";
 import { useState, useContext, useLayoutEffect } from "react";
 import {
@@ -72,18 +73,27 @@ export default function SingleBookScreen({ route, navigation }) {
             <FlatList
                 ListHeaderComponent={
                     <>
-                        <Text style={styles.body}>
-                            {book.title} by {book.author}
-
-                        </Text >
-                        <Text style={styles.body}>Category: {book.category}</Text>
-                        <Button title="Offer this book" onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}></Button>
-
-                        <Image
-                            style={styles.image}
-                            source={{ uri: book.coverImageUri }}
-                        />
-                        <Text style={styles.body}>{book.longDescription}</Text>
+                        <View style={{paddingBottom: 15}}>
+                            <Text style={styles.title}>
+                                {book.title}
+                            </Text >
+                            <Text style={styles.body}>Author: {book.author}</Text>
+                            <Text style={styles.body}>Category: {book.category}</Text>
+                        </View>
+                        <View style={{ alignItems: 'center'}}>
+                            <Image
+                                style={styles.image}
+                                source={{ uri: book.coverImageUri }}
+                            />
+                        </View>
+                        <Text style={styles.desc}>{book.longDescription}</Text>
+                        <View style={{padding: 20}}>
+                            <Pressable style={styles.button}
+                                onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}
+                            >
+                                <Text>Offer this book</Text>
+                            </Pressable>
+                        </View>
                     </>
                 }
                 data={offerInfo}
@@ -157,20 +167,37 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "#333333",
     },
-    image: {
+    desc: {
+        fontFamily: "Avenir",
+        fontSize: 15,
+        textAlign: "center",
+        color: "#333333",
+        padding:30,
+        paddingBottom: 10,
+        textAlign:'justify',
+    },
+    title:{
+        fontFamily:"Avenir",
+        fontWeight: 'bold',
+        fontSize: 19,
+        textAlign: "center",
+        color: "#333333",
+        paddingTop: 20,
+          },
+    image:{
         resizeMode: "contain",
         height: 300,
-        width: 300,
+        width: 200,
         justifyContent: "center",
         alignItems: "center",
-    },
+        padding: 10,
+        },
     button: {
-        flexDirection: "row",
         alignItems: "center",
         paddingVertical: 12,
         paddingHorizontal: 22,
         margin: 10,
-        borderRadius: 30,
+        borderRadius: 4,
         elevation: 3,
         backgroundColor: "#dddddd",
     },

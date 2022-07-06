@@ -23,10 +23,10 @@ const BookList = ({ books, navigation }) => {
             >
               <View style={styles.list}>
             <Image
-              style={{ resizeMode: "contain", height: 200, width: 100}}
+              style={styles.image}
               source={{ uri: item.coverImageUri }}
               />
-            <Text style={styles.body}>
+            <Text style={styles.title}>
               {item.title} by {item.author}
             </Text>
             <Text style={styles.body}>{item.shortDescription}</Text>
@@ -69,16 +69,25 @@ const styles = StyleSheet.create({
   },
   image:{
     resizeMode: "contain",
-    height: 300,
-    width: 300,
+    height: 200,
+    width: 150,
     justifyContent: "center",
     alignItems: "center",
+    padding: 10,
   },
   body:{
     fontFamily:"Avenir",
     fontSize: 15,
     textAlign: "center",
     color: "#333333",
+    textAlign:'justify',
+      },
+  title:{
+    fontFamily:"Avenir",
+    fontSize: 16,
+    textAlign: "center",
+    color: "#333333",
+    padding: 10,
       }
 });
 
