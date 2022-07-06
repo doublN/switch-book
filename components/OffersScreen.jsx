@@ -1,8 +1,9 @@
-import { View, Text, FlatList, Image, StyleSheet, Pressable, Button } from 'react-native'
+import { View, Text, FlatList, Image, StyleSheet, Pressable } from 'react-native'
 import React, { useEffect, useContext, useLayoutEffect, useState } from 'react'
 import UserContext from '../Contexts/UserContext'
 import { getOffersByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
 import { useIsFocused } from '@react-navigation/native';
+import styles from "./styles"
 
 export default function OffersScreen({navigation}) {
     const {currentUser} = useContext(UserContext);
@@ -38,8 +39,8 @@ export default function OffersScreen({navigation}) {
         <FlatList style={styles.view} data={offeredBooks} renderItem={({item}) =>
             <View style={styles.list}>
                 <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
-                <Text style={styles.body}><Text style={styles.bold}>{item.title}</Text> by {item.author}</Text>
-                <Text style={styles.body}>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
+                <Text style={[styles.body, styles.interactionsBody]}><Text style={styles.bold}>{item.title}</Text> by <Text style={styles.bold}>{item.author}</Text></Text>
+                <Text style={[styles.body, styles.interactionsBody]}>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
                 {item.status === "accepted" || item.status === "requested" ? <Pressable style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri })}><Text>Go to chat</Text></Pressable>: null}
                 {item.status === "requested" ? <Pressable style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}}><Text>Deny Request</Text></Pressable> : <Pressable style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}><Text>Remove offer</Text></Pressable>}
                 {item.status === "completed" ? <Pressable style={styles.button}><Text>Rate transaction"</Text></Pressable> : null}
@@ -48,51 +49,3 @@ export default function OffersScreen({navigation}) {
         />
     )
 }
-
-const styles=StyleSheet.create({
-    view:{
-        backgroundColor:"#aaaaaa",
-        fontFamily:"Avenir",
-        fontSize: 15,
-      },
-    list: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 50,
-        borderRadius: 30,
-        padding: 20,
-        margin: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "#ffffff",
-        backgroundColor: "#eeeeee",
-        borderRadius: 30,
-      },
-    body:{
-        fontFamily:"Avenir",
-        fontSize: 15,
-        textAlign: "center",
-        color: "#333333",
-        marginVertical: 5,
-        },
-    bold:{
-        fontWeight : "bold",
-        fontSize : 17
-    },
-    button: {
-        alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 22,
-        margin: 10,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: "#dddddd",
-    },
-    image:{
-        resizeMode: "contain",
-        height: 200,
-        width: 200,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-})

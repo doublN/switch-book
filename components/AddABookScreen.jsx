@@ -88,7 +88,7 @@ export default function AddABookScreen({ navigation, route }) {
         } else {
             addBook(selectedBook, value);
             addSwap(value, selectedBook, authorisedUser.uid);
-            navigation.navigate("Navigator", {
+            navigation.navigate("Switch Book", {
                 screen: "Interactions",
                 params: { screen: "Offer this book" },
             });

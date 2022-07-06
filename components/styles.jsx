@@ -78,4 +78,11 @@ export default StyleSheet.create({
         alignItems: "center",
         padding: 10,
     },
+    bold: {
+        fontWeight:"bold",
+        fontSize: 17,
+    },
+    interactionsBody : {
+        marginVertical: 5,
+    }
 });
