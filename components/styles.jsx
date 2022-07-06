@@ -2,18 +2,51 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
     ScrollView: { padding: 30 },
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#eeeeee",
+      },
+    icons: {
+        marginTop: 30,
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        },
+    titleFp: {
+        fontFamily:"Avenir",
+        fontSize: 33,
+        fontWeight: "bold",
+        marginBottom: 24,
+        textAlign: "center",
+        color: "#333333",
+        },
+    imageFp: {
+        marginBottom: 100,
+        height: 280,
+        width: 280,
+        borderRadius: 1800
+  },
+    bodyFp:{
+        fontFamily:"Avenir",
+        fontSize: 15,
+        textAlign: "center",
+        color: "#333333",
+      }, 
+    view:{
+        backgroundColor:"#aaaaaa",
+        fontFamily:"Avenir",
+        fontSize: 15,
+      },
     list: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 50,
-        borderRadius: 30,
         padding: 20,
         margin: 10,
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "#423034",
         backgroundColor: "#ffffff",
-        borderRadius: 30,
     },
     body: {
         fontFamily: "Avenir",
@@ -27,10 +60,13 @@ export default StyleSheet.create({
         width: 300,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
-        marginBottom: 20,
-        borderRadius: 50,
-        borderRadius: 30,
+        marginTop: "auto",
+        marginBottom: "auto",
+        marginLeft: "auto",
+        marginRight: "auto",
+        borderRadius: 18000,
+        width: 300,
+        height: 300,
     },
     profileImage: {
         resizeMode: "contain",
@@ -41,6 +77,16 @@ export default StyleSheet.create({
         marginTop: 20,
         marginBottom: 20
     },
+    bookListImage:{
+        resizeMode: "contain",
+        borderRadius: 50,
+        height: 300,
+        width: 300,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 40,
+        padding: 10,
+        },
     button: {
         flexDirection: "row",
         alignItems: "center",
@@ -50,8 +96,17 @@ export default StyleSheet.create({
         borderRadius: 30,
         elevation: 3,
         backgroundColor: "#dddddd",
-        
     },
+    search: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+        margin: 12,
+        height: 40,
+        borderWidth: 1,
+        borderRadius: 30,
+      },
     desc: {
         fontFamily: "Avenir",
         fontSize: 15,
@@ -69,12 +124,38 @@ export default StyleSheet.create({
         color: "#333333",
         paddingTop: 20,
           },
-    image:{
-        resizeMode: "contain",
-        height: 300,
-        width: 200,
-        justifyContent: "center",
-        alignItems: "center",
+    bookListTitle:{
+        fontFamily:"Avenir",
+        fontSize: 16,
+        textAlign: "center",
+        color: "#333333",
         padding: 10,
+        marginBottom: 10
+        },
+    containerProfile: {
+        flexDirection: "row",
+        justifyContent: "center",
+        },
+        profileImage: {
+            width: "100%",
+            height: 350,
+        },
+        bodyProfile: {
+            marginTop: 10,
+            fontFamily: "Avenir",
+            fontSize: 15,
+            padding: 5,
+            justifyContent: "center",
+            textAlign: "center",
+            color: "#333333",
+        },
+        buttonProfile: {
+            alignItems: "center",
+            paddingVertical: 12,
+            paddingHorizontal: 22,
+            margin: 10,
+            borderRadius: 4,
+            elevation: 3,
+            backgroundColor: "#dddddd",
         },
 });
