@@ -103,36 +103,46 @@ export default function SingleBookScreen({ route, navigation }) {
                 }
                 data={offerInfo}
                 renderItem={({ item }) => (
-                    <ScrollView style={styles.ScrollView}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                navigation.navigate("OtherUserScreen", {
-                                    user: item.offeredBy,
-                                })
-                            }
-                        >
-                            <Image
-                                style={styles.image}
-                                source={{ uri: item.selectedImage }}
-                            />
-                        </TouchableOpacity>
-                        <View >
-                            <Text style={styles.body}>Offered by: </Text>
-                            <Text style={styles.body} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy})}>
-                                {item.username}
-                            </Text>
+                    <ScrollView style={{paddingHorizontal: 20, paddingVertical: 10, paddingBottom:50}}>
+                        <View style={{borderWidth: 1, borderRadius: 15, flexDirection: 'row', padding: 8}}>
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate("OtherUserScreen", {
+                                            user: item.offeredBy,
+                                        })
+                                    }
+                                >
+                                    <Image
+                                        style={styles.profileImageSmall}
+                                        source={{ uri: item.selectedImage }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View>
+                                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                    <Text style={[styles.body, styles.left]}>Offered by: </Text>
+                                    <Text style={[styles.body, styles.left, {color:'blue'},{textDecorationLine: 'underline'}]} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy})}>
+                                        {item.username}
+                                    </Text>
+                                </View>
+                                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                    <Text style={[styles.body, styles.left]}>Condition: {item.condition}</Text>
+                                </View>
+                                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                    <Text style={[styles.body, styles.left]}>Rating: {item.rating}</Text>
+                                </View>
+                                <View>
+                                    <Pressable style={[styles.button, {flexDirection: 'row', justifyContent: 'flex-start'}]}
+                                        onPress={() => {
+                                            handleRequest(item.swapId);
+                                        }}
+                                    >
+                                        <Text>Request this book</Text>
+                                    </Pressable>
+                                </View>
+                            </View>
                         </View>
-                        <Text style={styles.body}>
-                            Condition: {item.condition}
-                        </Text>
-                        <Text style={styles.body}>Rating: {item.rating}</Text>
-                        <Button
-                            title="Request this book"
-                            onPress={() => {
-                                handleRequest(item.swapId);
-                            }}
-                        />
-                        <Button title="Offer this book" onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}></Button>
                     </ScrollView>
                 )}
             />

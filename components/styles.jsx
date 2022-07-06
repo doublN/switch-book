@@ -21,6 +21,9 @@ export default StyleSheet.create({
         textAlign: "center",
         color: "#333333",
     },
+    left: {
+        textAlign: "left",
+    },
     image: {
         resizeMode: "contain",
         height: 300,
@@ -33,16 +36,18 @@ export default StyleSheet.create({
         borderRadius: 30,
     },
     profileImage: {
-        resizeMode: "contain",
         height: 100,
         width: 100,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 20,
-        marginBottom: 20
+        borderRadius: 100,
+    },
+    profileImageSmall: {
+        height: 70,
+        width: 70,
+        borderRadius: 70,
+        margin: 10,
+        marginRight: 20
     },
     button: {
-        flexDirection: "row",
         alignItems: "center",
         paddingVertical: 12,
         paddingHorizontal: 22,
@@ -50,7 +55,6 @@ export default StyleSheet.create({
         borderRadius: 30,
         elevation: 3,
         backgroundColor: "#dddddd",
-        
     },
     desc: {
         fontFamily: "Avenir",
@@ -68,13 +72,6 @@ export default StyleSheet.create({
         textAlign: "center",
         color: "#333333",
         paddingTop: 20,
+        paddingHorizontal: 20
           },
-    image:{
-        resizeMode: "contain",
-        height: 300,
-        width: 200,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10,
-        },
 });
