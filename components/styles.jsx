@@ -69,11 +69,9 @@ export default StyleSheet.create({
         marginBottom: "auto",
         marginLeft: "auto",
         marginRight: "auto",
-        borderRadius: 18000,
-        width: 300,
-        height: 300,
     },
     profileImage: {
+        height: 300,
         width: "100%",
     },
     profileImageSmall: {
