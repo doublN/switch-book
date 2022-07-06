@@ -7,6 +7,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./Utils/firebase";
 import { useState, useEffect } from "react";
 import { getUserByUid } from "./Utils/dbQueries";
+import { LogBox } from "react-native";
 
 //Navigation
 import Navigator from "./components/Navigator";
@@ -21,6 +22,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+    LogBox.ignoreAllLogs();
+
     // authorisedUser = user in authentication database
     // currentUser = user in our firestore database
     const [authorisedUser] = useAuthState(auth);
@@ -35,38 +38,47 @@ export default function App() {
         }
     }, [authorisedUser]);
 
-  if (!authorisedUser) {
-    return <LoginPage auth={auth} />;
-  } else if (!currentUser) {
-    return (
-      <UserContext.Provider
-        value={{ currentUser, authorisedUser, setCurrentUser, auth }}
-      >
-        <CreateProfileScreen />
-      </UserContext.Provider>
-    );
-  } else {
-    return (
-      <UserContext.Provider
-        value={{ currentUser, authorisedUser, setCurrentUser, auth }}
-      >
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name={"Navigator"} component={Navigator} />
-            <Stack.Screen
-              name={"CreateProfile"}
-              component={CreateProfileScreen}
-            />
-            <Stack.Screen
-              name="SingleBookScreen"
-              component={SingleBookScreen}
-            />
-            <Stack.Screen name="OtherUserScreen" component={OtherUserScreen} />
-            <Stack.Screen name="AddABook" component={AddABookScreen} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </UserContext.Provider>
-    );
-  }
+    if (!authorisedUser) {
+        return <LoginPage auth={auth} />;
+    } else if (!currentUser) {
+        return (
+            <UserContext.Provider
+                value={{ currentUser, authorisedUser, setCurrentUser, auth }}
+            >
+                <CreateProfileScreen />
+            </UserContext.Provider>
+        );
+    } else {
+        return (
+            <UserContext.Provider
+                value={{ currentUser, authorisedUser, setCurrentUser, auth }}
+            >
+                <NavigationContainer>
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name={"Navigator"}
+                            component={Navigator}
+                        />
+                        <Stack.Screen
+                            name={"CreateProfile"}
+                            component={CreateProfileScreen}
+                        />
+                        <Stack.Screen
+                            name="SingleBookScreen"
+                            component={SingleBookScreen}
+                        />
+                        <Stack.Screen
+                            name="OtherUserScreen"
+                            component={OtherUserScreen}
+                        />
+                        <Stack.Screen
+                            name="AddABook"
+                            component={AddABookScreen}
+                        />
+                        <Stack.Screen name="Chat" component={ChatScreen} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </UserContext.Provider>
+        );
+    }
 }
