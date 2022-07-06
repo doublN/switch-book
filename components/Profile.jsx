@@ -32,7 +32,7 @@ const Profile = ({ navigation }) => {
             <Pressable
                 style={styles.button}
                 onPress={() => navigation.navigate("Navigator" , {screen : "Home"})}
-                ><Text styles={styles.body}>Find a book</Text></Pressable>
+                ><Text styles={styles.body}>Request a book</Text></Pressable>
                 </View>
             <LogoutButton auth={auth}/>
         </View>

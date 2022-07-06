@@ -1,15 +1,20 @@
-import { useState, useContext, useLayoutEffect } from 'react';
+import { useState, useContext, useLayoutEffect, useEffect } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { Button, View, Text } from "react-native"
+import { Image, View, Text, StyleSheet, Pressable } from "react-native"
 import UserContext from "../Contexts/UserContext";
 import { getMessages, addMessage } from '../Utils/dbQueries';
 import { updateSwapById, getUserByUid } from '../Utils/dbQueries';
 
 export default function ChatScreen({route, navigation}) {
+  const { swapId, title, offeredBy, requestedBy, coverImage } = route.params;
+  const { currentUser } = useContext(UserContext);
+  const [otherPersonsUsername, setOtherPersonsUsername] = useState("")
+
+  const [refresh, setRefresh] = useState(true)
   const [messages, setMessages] = useState([
           {
             _id: 1,
-            text: 'Please stay safe when arranging to swap books. Contact us to report any inappropriate behaviour',
+            text: 'Please stay safe when arranging to swap books. Contact us at help@switchbook.com to report any inappropriate behaviour',
             createdAt: 1657018269508,
             user: {
               _id: 2,
@@ -18,9 +23,35 @@ export default function ChatScreen({route, navigation}) {
             },
           },
         ]);
-  const { swapId, title, offeredBy, requestedBy } = route.params;
-  const { currentUser } = useContext(UserContext);
-  const [otherPersonsUsername, setOtherPersonsUsername] = useState("")
+
+
+  useEffect(() => {
+    let interval = setInterval(() => setRefresh(!refresh), 1000)
+    return () => clearInterval(interval)
+  },[refresh])
+
+  useEffect(() => {
+    fetchMessages();
+  },[refresh]);
+
+  useLayoutEffect(() => {
+    fetchUsername();
+  },[]);
+
+  async function fetchUsername() {
+    try{
+        const otherUser = await getUserByUid(offeredBy === currentUser.uid ? requestedBy : offeredBy)
+        setOtherPersonsUsername(otherUser.username);
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  function handleSend(messages) {
+    const text = messages[0].text;
+    addMessage(swapId, currentUser, text);
+    fetchMessages();
+  }
   
   async function fetchMessages() {
     try{
@@ -32,39 +63,6 @@ export default function ChatScreen({route, navigation}) {
     } catch(err) {
       console.log(err)
     }
-  }
-
-  async function fetchUsername() {
-    try{
-        const otherUser = await getUserByUid(offeredBy === currentUser.uid ? requestedBy : offeredBy)
-        setOtherPersonsUsername(otherUser.username);
-    } catch(err) {
-      console.log(err)
-    }
-  }
-
-  async function fetchMessages() {
-    try{
-      const messageLog = await getMessages(swapId)
-      const oldMessages = [...messages]
-      const allMessages = [...messageLog, ...oldMessages]
-      const uniqueMessages = allMessages.filter((value,idx,arr)=>arr.findIndex(value2=>(value2._id===value._id))===idx)
-      setMessages(uniqueMessages);
-    } catch(err) {
-      console.log(err)
-    }
-  }
-
-  useLayoutEffect(() => {
-    fetchUsername();
-    fetchMessages();
-  }, []);
-
-
-  function handleSend(messages) {
-    const text = messages[0].text;
-    addMessage(swapId, currentUser, text);
-    fetchMessages();
   }
 
   async function handleCompleteRequest(swapId){
@@ -79,14 +77,27 @@ export default function ChatScreen({route, navigation}) {
 
   return (
     <>
-      <View style={{paddingTop: 15, paddingBottom: 15}}>
-        <Text style={{textAlign: 'center'}}>{title}</Text>
-        <Text style={{textAlign: 'center'}}>{offeredBy === currentUser.uid ? "Requested by" : "Offered by"} {otherPersonsUsername}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 20}}>
+        <Image style={{resizeMode:'contain', height: 60, width : 50}} source={{uri : coverImage}}/>
+        <View style={{paddingTop: 15, paddingBottom: 15}}>
+          <Text style={{textAlign: 'left', fontSize: 17, paddingBottom: 5 }}>{title}</Text>
+          <Text style={{textAlign: 'left'}}>{offeredBy === currentUser.uid ? "Requested by" : "Offered by"} {otherPersonsUsername}</Text>
+        </View>
       </View>
       { offeredBy === currentUser.uid
         ? <View style={{ flexDirection: 'row', justifyContent: 'center'}}>
-            <Button title="Mark swap as complete" onPress={() => {handleCompleteRequest(swapId)}}/>
-            <Button title="Cancel swap" onPress={() => {handleDenyRequest(swapId)}}/>
+            <Pressable
+              style={styles.button}
+              onPress={() => {handleCompleteRequest(swapId)}}
+            >
+              <Text styles={styles.body}>Mark swap as complete</Text>
+            </Pressable>
+            <Pressable
+              style={styles.button}
+              onPress={() => {handleDenyRequest(swapId)}}
+            >
+              <Text styles={styles.body}>Cancel swap</Text>
+            </Pressable>
           </View>
         : <></>
       }
@@ -101,3 +112,22 @@ export default function ChatScreen({route, navigation}) {
     </>
   );
 }
+
+const styles =StyleSheet.create({
+  body:{
+    fontFamily:"Avenir",
+    fontSize: 15,
+    justifyContent: "center",
+    textAlign: "center",
+    color: "#333333",
+      },
+  button: {
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 22,
+    margin: 10,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#dddddd",
+    },
+  })

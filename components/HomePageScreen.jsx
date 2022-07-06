@@ -24,7 +24,7 @@ const HomePageScreen = ({navigation, clicked, setCLicked}) => {
       })
       .catch((err) => {
         setError(true);
-        console.log("err");
+        console.log(err);
       });
   }, [error, searchSubmit, isFocused]);
 

@@ -40,7 +40,7 @@ export default function OffersScreen({navigation}) {
                 <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
                 <Text style={styles.body}>{item.title} by {item.author}</Text>
                 <Text style={styles.body}>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
-                {item.status === "accepted" || item.status === "requested" ? <Button title="Go to chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy })}></Button>: null}
+                {item.status === "accepted" || item.status === "requested" ? <Button title="Go to chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri })}></Button>: null}
                 {item.status === "requested" ? <Button title="Deny Request" style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}} /> : <Button title="Remove offer" style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}/>}
                 {item.status === "completed" ? <Button style={styles.button} title="Rate transaction" /> : null}
             </View>
