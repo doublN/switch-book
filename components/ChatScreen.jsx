@@ -4,6 +4,7 @@ import { Image, View, Text, StyleSheet, Pressable } from "react-native"
 import UserContext from "../Contexts/UserContext";
 import { getMessages, addMessage } from '../Utils/dbQueries';
 import { updateSwapById, getUserByUid } from '../Utils/dbQueries';
+import styles from "./styles"
 
 export default function ChatScreen({route, navigation}) {
   const { swapId, title, offeredBy, requestedBy, coverImage } = route.params;
@@ -112,22 +113,3 @@ export default function ChatScreen({route, navigation}) {
     </>
   );
 }
-
-const styles =StyleSheet.create({
-  body:{
-    fontFamily:"Avenir",
-    fontSize: 15,
-    justifyContent: "center",
-    textAlign: "center",
-    color: "#333333",
-      },
-  button: {
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 22,
-    margin: 10,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "#dddddd",
-    },
-  })
