@@ -1,16 +1,19 @@
-import { View, Text, StyleSheet, FlatList, Image, Pressable} from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, Pressable, Button} from 'react-native'
 import React, {useContext, useLayoutEffect, useState} from 'react'
 import UserContext from '../Contexts/UserContext';
-import { getSwapsByUserID, getBookByIsbn } from '../Utils/dbQueries'
+import { getRequestsByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries'
+import { useIsFocused } from '@react-navigation/native';
 
-
-export default function RequestsScreen() {
+export default function RequestsScreen({navigation}) {
   const {currentUser} = useContext(UserContext);
   const [requestedBooks, setRequestedBooks]=useState([])
-
+  const [shouldUpdate, setShouldUpdate] = useState(false)
+  const isFocused = useIsFocused();
+  
   useLayoutEffect(() => {
+    setShouldUpdate(false)
     async function getUserOffers(){
-        const swaps= await getSwapsByUserID(currentUser.uid);
+        const swaps = await getRequestsByUserID(currentUser.uid);
         const userBooks = await Promise.all(swaps.map((swap) => getBookByIsbn(swap.isbn)))
         const requested = []
         for(let i = 0; i < swaps.length; i++){
@@ -20,23 +23,39 @@ export default function RequestsScreen() {
         setRequestedBooks(requested);
     }
     getUserOffers();
-}, [])
+}, [shouldUpdate, isFocused])
 
-  return (
-    <FlatList data={requestedBooks} renderItem={({item}) =>
-        <View style={styles.list}>
-            <Image style={{ resizeMode: "contain", height: 100, width: 100 }} source={{ uri: item.coverImageUri }}/>
-            <Text style={styles.body}>{item.title} by {item.author}</Text>
-            <Text style={styles.body}>Swap Status : {item.status}</Text>
-            <Pressable style={styles.button}><Text>Go to chat</Text></Pressable>
-            <Pressable style={styles.button}><Text>Remove Offer</Text></Pressable>
-        </View>
-        }
-        />
+async function handleRemoveOffer(swapId){
+  await deleteSwapById(swapId);
+  setShouldUpdate(true);
+}
+
+async function handleCancelRequest(swapId){
+  await updateSwapById(swapId, " ", "available");
+  setShouldUpdate(true);
+}
+
+return (
+  <FlatList style={styles.view} data={requestedBooks} renderItem={({item}) =>
+      <View style={styles.list}>
+          <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
+          <Text style={styles.body}>{item.title} by {item.author}</Text>
+          <Text style={styles.body}>Swap Status : {item.status}</Text>
+          {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri  })}></Button>: null}
+          {item.status === "requested" ? <Button title="Cancel request" style={styles.button} onPress={() => {handleCancelRequest(item.swapId)}} /> : null}
+          {item.status === "completed" ? <Button style={styles.button} title="Rate transaction" /> : null}
+      </View>
+      }
+  />
 )
 }
 
 const styles=StyleSheet.create({
+  view:{
+    backgroundColor:"#aaaaaa",
+    fontFamily:"Avenir",
+    fontSize: 15,
+  },
   list: {
       flex: 1,
       justifyContent: "center",
@@ -46,7 +65,7 @@ const styles=StyleSheet.create({
       padding: 20,
       margin: 10,
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: "#423034",
+      borderColor: "#ffffff",
       backgroundColor: "#eeeeee",
       borderRadius: 30,
     },
@@ -65,5 +84,12 @@ const styles=StyleSheet.create({
       borderRadius: 30,
       elevation: 3,
       backgroundColor: "#dddddd",
+  },
+  image:{
+    resizeMode: "contain",
+    height: 200,
+    width: 200,
+    justifyContent: "center",
+    alignItems: "center",
   },
 })

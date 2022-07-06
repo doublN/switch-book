@@ -9,8 +9,8 @@ const Tab = createMaterialTopTabNavigator();
 export default function InteractionsScreen({navigation}) {
     return (
         <Tab.Navigator>
-          <Tab.Screen name="Requested" component={RequestsScreen} navigation={navigation}/>
-          <Tab.Screen name="Offered" component={OffersScreen} navigation={navigation}/>
+          <Tab.Screen name="My Requests" component={RequestsScreen} navigation={navigation}/>
+          <Tab.Screen name="My Offers" component={OffersScreen} navigation={navigation}/>
         </Tab.Navigator>
       );
 }

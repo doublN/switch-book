@@ -27,30 +27,23 @@ const Profile = ({ navigation }) => {
             </View>
 
             <View>
-                <Pressable
-                    style={styles.button}
-                    onPress={() => navigation.navigate("CreateProfile")}
-                >
-                    <Text styles={styles.text}>Edit your profile</Text>
-                </Pressable>
-            </View>
-            <View style={styles.container}>
-                <Pressable
-                    style={styles.button}
-                    onPress={() => navigation.navigate("AddABook")}
-                >
-                    <Text styles={styles.text}>Offer a book</Text>
-                </Pressable>
-                <Pressable
-                    style={styles.button}
-                    onPress={() =>
-                        navigation.navigate("Navigator", { screen: "HomePage" })
-                    }
-                >
-                    <Text styles={styles.body}>Find a book</Text>
-                </Pressable>
-            </View>
-            <LogoutButton auth={auth} />
+
+            <Pressable style={styles.button}
+                onPress={() => navigation.navigate("CreateProfile")}
+                ><Text styles={styles.text}>Edit your profile</Text></Pressable>
+                 </View>
+                 <View style={styles.container}>
+            <Pressable
+                style={styles.button}
+                onPress={() => navigation.navigate("AddABook")}
+                ><Text styles={styles.text}>Offer a book</Text></Pressable>
+            <Pressable
+                style={styles.button}
+                onPress={() => navigation.navigate("Navigator" , {screen : "Home"})}
+                ><Text styles={styles.body}>Request a book</Text></Pressable>
+                </View>
+            <LogoutButton auth={auth}/>
+
         </View>
     );
 };

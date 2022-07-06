@@ -1,18 +1,6 @@
 import { async } from "@firebase/util";
 import { createdAt } from "expo-updates";
-import {
-    query,
-    where,
-    addDoc,
-    getDoc,
-    getDocs,
-    setDoc,
-    updateDoc,
-    doc,
-    orderBy,
-    collection,
-    deleteDoc,
-} from "firebase/firestore";
+import { query, where, addDoc, getDocs, setDoc, updateDoc, doc, orderBy,collection,deleteDoc} from "firebase/firestore";
 import { Alert } from "react-native";
 import { firestore } from "./firebase";
 
@@ -221,7 +209,7 @@ export const deleteSwapById = async (swapId) => {
     await deleteDoc(doc(firestore, "swaps", swapId));
 };
 
-export const getSwapsByUserID = async (uid) => {
+export const getOffersByUserID = async (uid) => {
     const swapsRef = collection(firestore, "swaps");
     const queryUser = query(swapsRef, where("offeredBy", "==", uid));
 
@@ -234,6 +222,21 @@ export const getSwapsByUserID = async (uid) => {
     } catch (err) {
         console.log(err);
     }
+};
+
+export const getRequestsByUserID = async (uid) => {
+  const swapsRef = collection(firestore, "swaps");
+  const queryUser = query(swapsRef, where("requestedBy", "==", uid));
+
+  try {
+      const querySnapshot = await getDocs(queryUser);
+      let books = [];
+      querySnapshot.forEach((docs) => books.push(docs.data()));
+      const currentUser = books;
+      return currentUser;
+  } catch (err) {
+      console.log(err);
+  }
 };
 
 export const getMessages = async (swapId) => {

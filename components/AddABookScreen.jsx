@@ -14,9 +14,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { addBook, addSwap } from "../Utils/dbQueries";
 import UserContext from "../Contexts/UserContext";
 
-export default function AddABookScreen({ navigation }) {
+export default function AddABookScreen({ navigation, route }) {
     const [books, setBooks] = useState([]);
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState(route.params ? route.params.isbn : "");
     const [passSearchText, setPassSearchText] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -29,7 +29,7 @@ export default function AddABookScreen({ navigation }) {
         { label: "Boxed edges", value: "Boxed-edges" },
     ]);
     const [selectedBook, setSelectedBook] = useState([]);
-    const { authorisedUser, setCurrentUser } = useContext(UserContext);
+    const { authorisedUser} = useContext(UserContext);
 
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=${passSearchText}`)
@@ -77,7 +77,7 @@ export default function AddABookScreen({ navigation }) {
         setPassSearchText(searchText);
     };
 
-    const handleAddBook_and_Sawp = () => {
+    const handleAddBook_and_Swap = () => {
         if (value === null || value === false) {
             alert("Please describe book's condition");
         } else {
@@ -88,11 +88,11 @@ export default function AddABookScreen({ navigation }) {
                 params: { screen: "Offered" },
             });
         }
-    };
+     };
 
     return (
         <View style={styles.list}>
-            <TextInput onChangeText={setSearchText} style={styles.input} />
+            <TextInput value={searchText} onChangeText={setSearchText} style={styles.searchBar} placeholder="Search by title, author or ISBN" />
             <Button
                 style={styles.borderRadius}
                 title="Search..."
@@ -103,18 +103,14 @@ export default function AddABookScreen({ navigation }) {
                     style={{ height: 100 }}
                     data={books}
                     renderItem={({ item }) => (
-                        <Pressable style={styles.logBox}>
+                        <Pressable style={styles.list}>
                             <Image
-                                style={{
-                                    resizeMode: "contain",
-                                    height: 300,
-                                    width: 150,
-                                }}
+                                style={styles.image}
                                 source={{
                                     uri: item.volumeInfo.imageLinks.thumbnail,
                                 }}
                             />
-                            <Text>
+                            <Text style={styles.body}>
                                 {item.volumeInfo.title} by{" "}
                                 {item.volumeInfo.authors}
                             </Text>
@@ -150,34 +146,53 @@ export default function AddABookScreen({ navigation }) {
             <Button
                 title="Add book"
                 style={styles.borderRadius}
-                onPress={handleAddBook_and_Sawp}
+                onPress={handleAddBook_and_Swap}
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    list: {
-        flex: 1,
-        padding: 20,
-        margin: 10,
-        borderRadius: 50,
-    },
-    input: {
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 30,
-    },
-    logBox: {
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 50,
-        padding: 10,
-        margin: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "#f0f0f0",
-        backgroundColor: "#f9f9f9",
-    },
+    view:{
+        backgroundColor:"#aaaaaa",
+        fontFamily:"Avenir",
+        fontSize: 15,
+      },
+        list: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: 50,
+          borderRadius: 30,
+          padding: 20,
+          margin: 10,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: "#ffffff",
+          backgroundColor: "",
+          borderRadius: 30,
+        },
+        searchBar: {
+            fontSize: 15,
+            marginLeft: 10,
+            width: "90%",
+            fontFamily:"Avenir",
+            textAlign: "center",
+            height: 30,
+            backgroundColor: "white",
+            padding: 10,
+            borderRadius: 30
+          },
+        image:{
+          resizeMode: "contain",
+          height: 300,
+          width: 300,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        body:{
+          fontFamily:"Avenir",
+          fontSize: 15,
+          textAlign: "center",
+          color: "#333333",
+            },
 });

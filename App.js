@@ -38,6 +38,7 @@ export default function App() {
         }
     }, [authorisedUser]);
 
+
     if (!authorisedUser) {
         return <LoginPage auth={auth} />;
     } else if (!currentUser) {

@@ -1,4 +1,5 @@
 import { Button, View, Text, TextInput, StyleSheet } from "react-native";
+import { useIsFocused } from '@react-navigation/native'
 import BookList from "./BookList";
 import { useContext, useState, useEffect } from "react";
 import UserContext from "../Contexts/UserContext";
@@ -12,6 +13,7 @@ const HomePageScreen = ({navigation, clicked, setCLicked}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [searchSubmit, setSearchSubmit] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     setSearchSubmit(false);
@@ -22,9 +24,9 @@ const HomePageScreen = ({navigation, clicked, setCLicked}) => {
       })
       .catch((err) => {
         setError(true);
-        console.log("err");
+        console.log(err);
       });
-  }, [error, searchSubmit]);
+  }, [error, searchSubmit, isFocused]);
 
   if (error) {
     return (
