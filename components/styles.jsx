@@ -68,7 +68,7 @@ export default StyleSheet.create({
         textAlign: "center",
         color: "#333333",
         paddingTop: 20,
-          },
+    },
     image:{
         resizeMode: "contain",
         height: 300,
@@ -76,5 +76,13 @@ export default StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
-        },
+    },
+    bold: {
+        fontWeight:"bold",
+        fontSize: 17,
+    },
+    interactionsBody : {
+        marginVertical: 5,
+    }
+        
 });
