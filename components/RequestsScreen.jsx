@@ -2,16 +2,18 @@ import { View, Text, StyleSheet, FlatList, Image, Pressable, Button} from 'react
 import React, {useContext, useLayoutEffect, useState} from 'react'
 import UserContext from '../Contexts/UserContext';
 import { getRequestsByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries'
+import { useIsFocused } from '@react-navigation/native';
 
 export default function RequestsScreen({navigation}) {
   const {currentUser} = useContext(UserContext);
   const [requestedBooks, setRequestedBooks]=useState([])
   const [shouldUpdate, setShouldUpdate] = useState(false)
+  const isFocused = useIsFocused();
   
   useLayoutEffect(() => {
     setShouldUpdate(false)
     async function getUserOffers(){
-        const swaps= await getRequestsByUserID(currentUser.uid);
+        const swaps = await getRequestsByUserID(currentUser.uid);
         const userBooks = await Promise.all(swaps.map((swap) => getBookByIsbn(swap.isbn)))
         const requested = []
         for(let i = 0; i < swaps.length; i++){
@@ -21,15 +23,15 @@ export default function RequestsScreen({navigation}) {
         setRequestedBooks(requested);
     }
     getUserOffers();
-}, [shouldUpdate])
+}, [shouldUpdate, isFocused])
 
 async function handleRemoveOffer(swapId){
   await deleteSwapById(swapId);
   setShouldUpdate(true);
 }
 
-async function handleDenyRequest(swapId){
-  await updateSwapById(swapId, null, "available");
+async function handleCancelRequest(swapId){
+  await updateSwapById(swapId, " ", "available");
   setShouldUpdate(true);
 }
 
@@ -38,9 +40,9 @@ return (
       <View style={styles.list}>
           <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
           <Text style={styles.body}>{item.title} by {item.author}</Text>
-          <Text style={styles.body}>Swap Status : {item.status === "requested" ? "accepted" : item.status}</Text>
-          {item.status === "accepted" || item.status === "requested" ? <Button title="Go to chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri })}></Button>: null}
-          {item.status === "requested" ? <Button title="Cancel request" style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}} /> : <Button title="Deny request" style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}/>}
+          <Text style={styles.body}>Swap Status : {item.status}</Text>
+          {item.status === "accepted" || item.status === "requested" ? <Button title="Start chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri  })}></Button>: null}
+          {item.status === "requested" ? <Button title="Cancel request" style={styles.button} onPress={() => {handleCancelRequest(item.swapId)}} /> : null}
           {item.status === "completed" ? <Button style={styles.button} title="Rate transaction" /> : null}
       </View>
       }

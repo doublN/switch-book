@@ -14,9 +14,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { addBook, addSwap } from "../Utils/dbQueries";
 import UserContext from "../Contexts/UserContext";
 
-export default function AddABookScreen({ navigation }) {
+export default function AddABookScreen({ navigation, route }) {
     const [books, setBooks] = useState([]);
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState(route.params ? route.params.isbn : "");
     const [passSearchText, setPassSearchText] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -29,7 +29,7 @@ export default function AddABookScreen({ navigation }) {
         { label: "Boxed edges", value: "Boxed-edges" },
     ]);
     const [selectedBook, setSelectedBook] = useState([]);
-    const { authorisedUser, setCurrentUser, setShouldUpdateOffers } = useContext(UserContext);
+    const { authorisedUser} = useContext(UserContext);
 
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=${passSearchText}`)
@@ -75,12 +75,11 @@ export default function AddABookScreen({ navigation }) {
         addBook(selectedBook, value);
         addSwap(value, selectedBook, authorisedUser.uid);
         navigation.navigate("Home")
-        setShouldUpdateOffers(true);
     };
 
     return (
         <View style={styles.list}>
-            <TextInput onChangeText={setSearchText} style={styles.searchBar} placeholder="Search by title, author or ISBN" />
+            <TextInput value={searchText} onChangeText={setSearchText} style={styles.searchBar} placeholder="Search by title, author or ISBN" />
             <Button
                 style={styles.borderRadius}
                 title="Search..."

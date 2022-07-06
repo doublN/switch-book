@@ -76,7 +76,7 @@ export default function SingleBookScreen({route, navigation}) {
                             {book.title} by {book.author}
                         </Text >
                         <Text style={styles.body}>Category: {book.category}</Text>
-                        <Button title="Offer this book" onPress={()=>{navigation.navigate("Offered")}}></Button>
+                        <Button title="Offer this book" onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}></Button>
                         <Image
                             style={styles.image}
                             source={{ uri: book.coverImageUri }}
