@@ -31,8 +31,6 @@ export default function AddABookScreen({ navigation, route }) {
     const [selectedBook, setSelectedBook] = useState([]);
     const { authorisedUser} = useContext(UserContext);
 
-    const singleBookIsbn  = route.params ? route.params.isbn : null;
-
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=${passSearchText}`)
             .then((response) => {

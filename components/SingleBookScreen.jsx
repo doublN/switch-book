@@ -22,7 +22,6 @@ export default function SingleBookScreen({route, navigation}) {
     const [offerInfo, setOfferInfo] = useState([]);
     const [request, setRequest] = useState(false);
     const { currentUser } = useContext(UserContext);
-    console.log(book);
 
     useLayoutEffect(() => {
         async function mergeQueries() {
