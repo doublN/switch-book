@@ -74,16 +74,15 @@ export default StyleSheet.create({
         height: 300,
     },
     profileImage: {
-        height: 100,
-        width: 100,
-        borderRadius: 100,
+        height: 300,
+        width: "100%",
     },
     profileImageSmall: {
         height: 70,
         width: 70,
         borderRadius: 70,
         margin: 10,
-        marginRight: 20
+        marginRight: 20,
         justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
