@@ -106,7 +106,7 @@ export default function SingleBookScreen({ route, navigation }) {
                     <ScrollView style={styles.ScrollView}>
                         <TouchableOpacity
                             onPress={() =>
-                                navigation.navigate("Other User Screen", {
+                                navigation.navigate("OtherUserScreen", {
                                     user: item.offeredBy,
                                 })
                             }
