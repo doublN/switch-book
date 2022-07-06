@@ -38,11 +38,11 @@ export default function OffersScreen({navigation}) {
         <FlatList style={styles.view} data={offeredBooks} renderItem={({item}) =>
             <View style={styles.list}>
                 <Image style={styles.image} source={{ uri: item.coverImageUri }}/>
-                <Text style={styles.body}>{item.title} by {item.author}</Text>
+                <Text style={styles.body}><Text style={styles.bold}>{item.title}</Text> by {item.author}</Text>
                 <Text style={styles.body}>Swap Status : {item.status === "available" ? "waiting for request" : item.status}</Text>
-                {item.status === "accepted" || item.status === "requested" ? <Button title="Go to chat" style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri })}></Button>: null}
-                {item.status === "requested" ? <Button title="Deny Request" style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}} /> : <Button title="Remove offer" style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}/>}
-                {item.status === "completed" ? <Button style={styles.button} title="Rate transaction" /> : null}
+                {item.status === "accepted" || item.status === "requested" ? <Pressable style={styles.button} onPress={() => navigation.navigate("Chat", {swapId: item.swapId, title: item.title, offeredBy: item.offeredBy, requestedBy: item.requestedBy, coverImage: item.coverImageUri })}><Text>Go to chat</Text></Pressable>: null}
+                {item.status === "requested" ? <Pressable style={styles.button} onPress={() => {handleDenyRequest(item.swapId)}}><Text>Deny Request</Text></Pressable> : <Pressable style={styles.button} onPress={() => handleRemoveOffer(item.swapId)}><Text>Remove offer</Text></Pressable>}
+                {item.status === "completed" ? <Pressable style={styles.button}><Text>Rate transaction"</Text></Pressable> : null}
             </View>
             }
         />
@@ -68,19 +68,23 @@ const styles=StyleSheet.create({
         backgroundColor: "#eeeeee",
         borderRadius: 30,
       },
-      body:{
+    body:{
         fontFamily:"Avenir",
         fontSize: 15,
         textAlign: "center",
         color: "#333333",
-          },
+        marginVertical: 5,
+        },
+    bold:{
+        fontWeight : "bold",
+        fontSize : 17
+    },
     button: {
-        flexDirection: "row",
-        alignItems: 'center',
+        alignItems: "center",
         paddingVertical: 12,
         paddingHorizontal: 22,
         margin: 10,
-        borderRadius: 30,
+        borderRadius: 4,
         elevation: 3,
         backgroundColor: "#dddddd",
     },
@@ -90,5 +94,5 @@ const styles=StyleSheet.create({
         width: 200,
         justifyContent: "center",
         alignItems: "center",
-      },
+    },
 })
