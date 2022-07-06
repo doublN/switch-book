@@ -52,29 +52,6 @@ export default StyleSheet.create({
         backgroundColor: "#dddddd",
         
     },
-  });
-
-  const styles = StyleSheet.create({
-    ScrollView: { padding: 30 },
-    list: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 50,
-        borderRadius: 30,
-        padding: 20,
-        margin: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "#423034",
-        backgroundColor: "#eeeeee",
-        borderRadius: 30,
-    },
-    body: {
-        fontFamily: "Avenir",
-        fontSize: 15,
-        textAlign: "center",
-        color: "#333333",
-    },
     desc: {
         fontFamily: "Avenir",
         fontSize: 15,
@@ -100,13 +77,4 @@ export default StyleSheet.create({
         alignItems: "center",
         padding: 10,
         },
-    button: {
-        alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 22,
-        margin: 10,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: "#dddddd",
-    },
 });
