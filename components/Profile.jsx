@@ -29,7 +29,7 @@ const Profile = ({ navigation }) => {
             <View>
                 <Pressable
                     style={styles.button}
-                    onPress={() => navigation.navigate("CreateProfile")}
+                    onPress={() => navigation.navigate("Create Profile")}
                 >
                     <Text styles={styles.text}>Edit your profile</Text>
                 </Pressable>
@@ -37,14 +37,14 @@ const Profile = ({ navigation }) => {
             <View style={styles.container}>
                 <Pressable
                     style={styles.button}
-                    onPress={() => navigation.navigate("AddABook")}
+                    onPress={() => navigation.navigate("Offer a Book")}
                 >
                     <Text styles={styles.text}>Offer a book</Text>
                 </Pressable>
                 <Pressable
                     style={styles.button}
                     onPress={() =>
-                        navigation.navigate("Navigator", { screen: "Home" })
+                        navigation.navigate("Switch Book", { screen: "Home" })
                     }
                 >
                     <Text styles={styles.body}>Request a book</Text>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#dddddd",
     },
     imageFp: {
-        marginTop: "auto",
+        marginTop: 20,
         marginBottom: "auto",
         marginLeft: "auto",
         marginRight: "auto",

@@ -57,23 +57,23 @@ export default function App() {
                 <NavigationContainer>
                     <Stack.Navigator>
                         <Stack.Screen
-                            name={"Navigator"}
+                            name={"Switch Book"}
                             component={Navigator}
                         />
                         <Stack.Screen
-                            name={"CreateProfile"}
+                            name={"Create Profile"}
                             component={CreateProfileScreen}
                         />
                         <Stack.Screen
-                            name="SingleBookScreen"
+                            name="Book Details"
                             component={SingleBookScreen}
                         />
                         <Stack.Screen
-                            name="OtherUserScreen"
+                            name="User Profile"
                             component={OtherUserScreen}
                         />
                         <Stack.Screen
-                            name="AddABook"
+                            name="Offer a Book"
                             component={AddABookScreen}
                         />
                         <Stack.Screen name="Chat" component={ChatScreen} />

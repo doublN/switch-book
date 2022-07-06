@@ -93,7 +93,7 @@ export default function SingleBookScreen({ route, navigation }) {
                         <Text style={styles.desc}>{book.longDescription}</Text>
                         <View style={{padding: 20}}>
                             <Pressable style={styles.button}
-                                onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}
+                                onPress={()=>{navigation.navigate("Offer a Book", {isbn : book.isbn})}}
                             >
                                 <Text>Offer this book</Text>
                             </Pressable>
@@ -107,11 +107,7 @@ export default function SingleBookScreen({ route, navigation }) {
                         <View style={{borderWidth: 1, borderRadius: 15, flexDirection: 'row', padding: 8}}>
                             <View>
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        navigation.navigate("OtherUserScreen", {
-                                            user: item.offeredBy,
-                                        })
-                                    }
+                                    onPress={() => navigation.navigate("User Profile", { user: item.offeredBy})}
                                 >
                                     <Image
                                         style={styles.profileImageSmall}
@@ -122,7 +118,7 @@ export default function SingleBookScreen({ route, navigation }) {
                             <View>
                                 <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
                                     <Text style={[styles.body, styles.left]}>Offered by: </Text>
-                                    <Text style={[styles.body, styles.left, {color:'blue'},{textDecorationLine: 'underline'}]} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy})}>
+                                    <Text style={[styles.body, styles.left, {color:'blue'},{textDecorationLine: 'underline'}]} onPress={() => navigation.navigate("User Profile", { user: item.offeredBy})}>
                                         {item.username}
                                     </Text>
                                 </View>
@@ -143,6 +139,7 @@ export default function SingleBookScreen({ route, navigation }) {
                                 </View>
                             </View>
                         </View>
+
                     </ScrollView>
                 )}
             />

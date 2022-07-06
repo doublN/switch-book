@@ -9,6 +9,8 @@ export default StyleSheet.create({
         borderRadius: 50,
         borderRadius: 30,
         padding: 20,
+        marginLeft: "auto",
+        marginRight: "auto",
         margin: 10,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: "#423034",
@@ -46,6 +48,10 @@ export default StyleSheet.create({
         borderRadius: 70,
         margin: 10,
         marginRight: 20
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+        marginBottom: 20,
     },
     button: {
         alignItems: "center",
@@ -61,17 +67,25 @@ export default StyleSheet.create({
         fontSize: 15,
         textAlign: "center",
         color: "#333333",
-        padding:30,
+        padding: 30,
         paddingBottom: 10,
-        textAlign:'justify',
+        textAlign: "justify",
     },
-    title:{
-        fontFamily:"Avenir",
-        fontWeight: 'bold',
+    title: {
+        fontFamily: "Avenir",
+        fontWeight: "bold",
         fontSize: 19,
         textAlign: "center",
         color: "#333333",
         paddingTop: 20,
         paddingHorizontal: 20
           },
+    },
+    bold: {
+        fontWeight:"bold",
+        fontSize: 17,
+    },
+    interactionsBody : {
+        marginVertical: 5,
+    }
 });
