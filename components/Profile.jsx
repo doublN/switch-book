@@ -4,7 +4,7 @@ import UserContext from "../Contexts/UserContext";
 import { LogoutButton } from "./LogoutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { Rowdies_700Bold } from "@expo-google-fonts/dev";
+import { Exo_100Thin, Rowdies_700Bold } from "@expo-google-fonts/dev";
 
 const Profile = ({ navigation }) => {
     const { currentUser, auth } = useContext(UserContext);
@@ -12,7 +12,7 @@ const Profile = ({ navigation }) => {
     return (
         <View>
             <Image
-                style={styles.profileImage}
+                style={styles.imageFp}
                 resizeMode="stretch"
                 source={{ uri: currentUser.selectedImage }}
             />
@@ -27,23 +27,30 @@ const Profile = ({ navigation }) => {
             </View>
 
             <View>
-
-            <Pressable style={styles.button}
-                onPress={() => navigation.navigate("CreateProfile")}
-                ><Text styles={styles.text}>Edit your profile</Text></Pressable>
-                 </View>
-                 <View style={styles.container}>
-            <Pressable
-                style={styles.button}
-                onPress={() => navigation.navigate("AddABook")}
-                ><Text styles={styles.text}>Offer a book</Text></Pressable>
-            <Pressable
-                style={styles.button}
-                onPress={() => navigation.navigate("Navigator" , {screen : "Home"})}
-                ><Text styles={styles.body}>Request a book</Text></Pressable>
-                </View>
-            <LogoutButton auth={auth}/>
-
+                <Pressable
+                    style={styles.button}
+                    onPress={() => navigation.navigate("CreateProfile")}
+                >
+                    <Text styles={styles.text}>Edit your profile</Text>
+                </Pressable>
+            </View>
+            <View style={styles.container}>
+                <Pressable
+                    style={styles.button}
+                    onPress={() => navigation.navigate("AddABook")}
+                >
+                    <Text styles={styles.text}>Offer a book</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.button}
+                    onPress={() =>
+                        navigation.navigate("Navigator", { screen: "Home" })
+                    }
+                >
+                    <Text styles={styles.body}>Request a book</Text>
+                </Pressable>
+            </View>
+            <LogoutButton auth={auth} />
         </View>
     );
 };
@@ -60,6 +67,7 @@ const styles = StyleSheet.create({
     body: {
         fontFamily: "Avenir",
         fontSize: 15,
+        padding: 5,
         justifyContent: "center",
         textAlign: "center",
         color: "#333333",
@@ -72,6 +80,15 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 3,
         backgroundColor: "#dddddd",
+    },
+    imageFp: {
+        marginTop: "auto",
+        marginBottom: "auto",
+        marginLeft: "auto",
+        marginRight: "auto",
+        borderRadius: 18000,
+        width: 300,
+        height: 300,
     },
 });
 export default Profile;
