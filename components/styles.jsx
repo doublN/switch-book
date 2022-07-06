@@ -44,6 +44,8 @@ export default StyleSheet.create({
         alignItems: "center",
         borderRadius: 50,
         padding: 20,
+        marginLeft: "auto",
+        marginRight: "auto",
         margin: 10,
         borderWidth: StyleSheet.hairlineWidth,
         backgroundColor: "#ffffff",
@@ -53,6 +55,9 @@ export default StyleSheet.create({
         fontSize: 15,
         textAlign: "center",
         color: "#333333",
+    },
+    left: {
+        textAlign: "left",
     },
     image: {
         resizeMode: "contain",
@@ -69,13 +74,20 @@ export default StyleSheet.create({
         height: 300,
     },
     profileImage: {
-        resizeMode: "contain",
         height: 100,
         width: 100,
+        borderRadius: 100,
+    },
+    profileImageSmall: {
+        height: 70,
+        width: 70,
+        borderRadius: 70,
+        margin: 10,
+        marginRight: 20
         justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
-        marginBottom: 20
+        marginBottom: 20,
     },
     bookListImage:{
         resizeMode: "contain",
@@ -88,7 +100,6 @@ export default StyleSheet.create({
         padding: 10,
         },
     button: {
-        flexDirection: "row",
         alignItems: "center",
         paddingVertical: 12,
         paddingHorizontal: 22,
@@ -112,17 +123,18 @@ export default StyleSheet.create({
         fontSize: 15,
         textAlign: "center",
         color: "#333333",
-        padding:30,
+        padding: 30,
         paddingBottom: 10,
-        textAlign:'justify',
+        textAlign: "justify",
     },
-    title:{
-        fontFamily:"Avenir",
-        fontWeight: 'bold',
+    title: {
+        fontFamily: "Avenir",
+        fontWeight: "bold",
         fontSize: 19,
         textAlign: "center",
         color: "#333333",
         paddingTop: 20,
+        paddingHorizontal: 20
           },
     bookListTitle:{
         fontFamily:"Avenir",
@@ -135,10 +147,6 @@ export default StyleSheet.create({
     containerProfile: {
         flexDirection: "row",
         justifyContent: "center",
-        },
-        profileImage: {
-            width: "100%",
-            height: 350,
         },
         bodyProfile: {
             marginTop: 10,
@@ -158,4 +166,11 @@ export default StyleSheet.create({
             elevation: 3,
             backgroundColor: "#dddddd",
         },
+    bold: {
+        fontWeight:"bold",
+        fontSize: 17,
+    },
+    interactionsBody : {
+        marginVertical: 5,
+    }
 });

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useLayoutEffect, useState } from "react";
 import { getUserByUid, getOffersByUserID, getBookByIsbn } from '../Utils/dbQueries'
+import styles from "./styles"
 
 export default function OtherUserScreen({route, navigation}) {
     const { user } = route.params;
@@ -53,44 +54,40 @@ export default function OtherUserScreen({route, navigation}) {
     }
     
     return (
-        <View>
+        <View style={styles.view}>
             <FlatList 
             ListHeaderComponent={
                 <View style={styles.list}>
-                    <Image source={{uri : userInfo.selectedImage}} style={styles.thumbnail}></Image>
-                    <Text>Username: {userInfo.username}</Text>
-                    <Text>Location: {userInfo.location}</Text>
-                    <Text>Rating: {userInfo.rating}</Text>
-                    <Text>Successful swaps: {userInfo.successfulSwaps}</Text>
-                    <Text>Date joined: {new Date(userInfo.dateJoined.seconds * 1000).toDateString()}</Text>
+                    <Image source={{uri : userInfo.selectedImage}} style={styles.profileImageSmall}></Image>
+                    <Text style={styles.body}>Username: {userInfo.username}</Text>
+                    <Text style={styles.body}>Location: {userInfo.location}</Text>
+                    <Text style={styles.body}>Rating: {userInfo.rating}</Text>
+                    <Text style={styles.body}>Successful swaps: {userInfo.successfulSwaps}</Text>
+                    <Text style={styles.body}>Date joined: {new Date(userInfo.dateJoined.seconds * 1000).toDateString()}</Text>
                 </View>
             }
             data={userBooks}
             renderItem={({item}) =>
-            <Pressable style={{paddingTop: 30}} onPress={() => {
-                navigation.navigate("SingleBookScreen", { book: item });
-              }}>
-                <Image style={{ resizeMode: "contain", height: 100, width: 100 }} source={{ uri: item.coverImageUri }}/>
-                <Text>{item.title} by {item.author}</Text>
-                <Text>Category: {item.category}</Text>
-                <Text>{item.shortDescription}</Text>
-            </Pressable>
+            <Pressable
+            onPress={() => {
+              navigation.navigate("SingleBookScreen", { book: item });
+            }}
+            >
+              <View style={styles.list}>
+            <Image
+
+            style={styles.image}
+
+              source={{ uri: item.coverImageUri }}
+              />
+            <Text style={styles.title}>
+              {item.title} by {item.author}
+            </Text>
+            <Text style={styles.body}>{item.shortDescription}</Text>
+              </View>
+          </Pressable>
             }
             />
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    list: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 50,
-      },
-    thumbnail: {
-        borderRadius: 100,
-        width: 100,
-        height: 100,
-    },
-});

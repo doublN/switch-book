@@ -28,23 +28,25 @@ const Profile = ({ navigation }) => {
 
             <View>
                 <Pressable
-                    style={styles.buttonProfile}
-                    onPress={() => navigation.navigate("CreateProfile")}
+                    style={styles.button}
+                    onPress={() => navigation.navigate("Create Profile")}
+
                 >
                     <Text styles={styles.text}>Edit your profile</Text>
                 </Pressable>
             </View>
             <View style={styles.containerProfile}>
                 <Pressable
-                    style={styles.buttonProfile}
-                    onPress={() => navigation.navigate("AddABook")}
+                    style={styles.button}
+                    onPress={() => navigation.navigate("Offer a Book")}
+
                 >
                     <Text styles={styles.buttonProfile}>Offer a book</Text>
                 </Pressable>
                 <Pressable
                     style={styles.button}
                     onPress={() =>
-                        navigation.navigate("Navigator", { screen: "Home" })
+                        navigation.navigate("Switch Book", { screen: "Home" })
                     }
                 >
                     <Text styles={styles.body}>Request a book</Text>

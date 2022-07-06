@@ -16,7 +16,7 @@ const BookList = ({ books, navigation }) => {
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("SingleBookScreen", { book: item });
+              navigation.navigate("Book Details", { book: item });
             }}
             >
               <View style={styles.list}>
