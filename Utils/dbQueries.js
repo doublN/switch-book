@@ -103,7 +103,6 @@ export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
         return item.type === "ISBN_10";
     });
 
-    console.log(isbn[0].identifier);
     try {
         const refDoc = await addDoc(collection(firestore, "swaps"), {
             condition,

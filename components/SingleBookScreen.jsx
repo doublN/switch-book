@@ -93,7 +93,7 @@ export default function SingleBookScreen({ route, navigation }) {
                         <Text style={styles.desc}>{book.longDescription}</Text>
                         <View style={{padding: 20}}>
                             <Pressable style={styles.button}
-                                onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}
+                                onPress={()=>{navigation.navigate("Offer a Book", {isbn : book.isbn})}}
                             >
                                 <Text>Offer this book</Text>
                             </Pressable>
@@ -118,7 +118,7 @@ export default function SingleBookScreen({ route, navigation }) {
                         </TouchableOpacity>
                         <View >
                             <Text style={styles.body}>Offered by: </Text>
-                            <Text style={styles.body} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy})}>
+                            <Text style={styles.body} onPress={() => navigation.navigate("User Profile", { user: item.offeredBy})}>
                                 {item.username}
                             </Text>
                         </View>
@@ -132,7 +132,7 @@ export default function SingleBookScreen({ route, navigation }) {
                                 handleRequest(item.swapId);
                             }}
                         />
-                        <Button title="Offer this book" onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}></Button>
+                        <Button title="Offer this book" onPress={()=>{navigation.navigate("Offer a Book", {isbn : book.isbn})}}></Button>
                     </ScrollView>
                 )}
             />

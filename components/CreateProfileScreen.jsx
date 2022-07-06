@@ -45,7 +45,7 @@ export default function CreateProfileScreen({ navigation }) {
                 () => {
                     getUserByUid(authorisedUser.uid).then((currentUser) => {
                         setCurrentUser(currentUser);
-                        navigation.navigate("Navigator");
+                        navigation.navigate("Switch Book");
                     });
                 }
             )
@@ -54,7 +54,7 @@ export default function CreateProfileScreen({ navigation }) {
                 () => {
                     getUserByUid(authorisedUser.uid).then((currentUser) => {
                         setCurrentUser(currentUser);
-                        navigation.navigate("Navigator");
+                        navigation.navigate("Switch Book");
                     });
                 }
             );

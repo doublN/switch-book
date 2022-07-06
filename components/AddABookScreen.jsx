@@ -49,7 +49,6 @@ export default function AddABookScreen({ navigation, route }) {
             .then((filterItems) => {
                 setValue(null);
                 setBooks(filterItems);
-                console.log(filtered);
             })
             .catch((error) => {});
     }, [error, passSearchText]);
@@ -83,7 +82,7 @@ export default function AddABookScreen({ navigation, route }) {
         } else {
             addBook(selectedBook, value);
             addSwap(value, selectedBook, authorisedUser.uid);
-            navigation.navigate("Navigator", {
+            navigation.navigate("Switch Book", {
                 screen: "Interactions",
                 params: { screen: "Offer this book" },
             });
