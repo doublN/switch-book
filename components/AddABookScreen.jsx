@@ -37,15 +37,24 @@ export default function AddABookScreen({ navigation, route }) {
                 return response.json();
             })
             .then(({ items }) => {
-                setValue(null);
-                setBooks(items);
                 setIsLoading(false);
+                return items.filter((item) => {
+                    return (
+                        item.volumeInfo.categories !== undefined &&
+                        item.volumeInfo.industryIdentifiers !== undefined &&
+                        item.volumeInfo.imageLinks.thumbnail !== undefined
+                    );
+                });
             })
-            .catch((error) => {
-                setError(true);
-            });
+            .then((filterItems) => {
+                setValue(null);
+                setBooks(filterItems);
+                console.log(filtered);
+            })
+            .catch((error) => {});
     }, [error, passSearchText]);
     if (error) {
+        console.log(error);
         return (
             <View>
                 <Text>
@@ -71,11 +80,15 @@ export default function AddABookScreen({ navigation, route }) {
     const handleAddBook_and_Swap = () => {
         if (value === null || value === false) {
             alert("Please describe book's condition");
+        } else {
+            addBook(selectedBook, value);
+            addSwap(value, selectedBook, authorisedUser.uid);
+            navigation.navigate("Navigator", {
+                screen: "Interactions",
+                params: { screen: "Offered" },
+            });
         }
-        addBook(selectedBook, value);
-        addSwap(value, selectedBook, authorisedUser.uid);
-        navigation.navigate("Home")
-    };
+     };
 
     return (
         <View style={styles.list}>

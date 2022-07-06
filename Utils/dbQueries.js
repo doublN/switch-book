@@ -1,23 +1,22 @@
 import { async } from "@firebase/util";
 import { createdAt } from "expo-updates";
-import { query, where, addDoc, getDocs, setDoc, updateDoc, doc, orderBy,collection,deleteDoc,
-} from "firebase/firestore";
+import { query, where, addDoc, getDocs, setDoc, updateDoc, doc, orderBy,collection,deleteDoc} from "firebase/firestore";
 import { Alert } from "react-native";
 import { firestore } from "./firebase";
 
 export const getUserByUid = async (uid) => {
-  const usersRef = collection(firestore, "users");
-  const queryUser = query(usersRef, where("uid", "==", uid));
+    const usersRef = collection(firestore, "users");
+    const queryUser = query(usersRef, where("uid", "==", uid));
 
-  try {
-    const querySnapshot = await getDocs(queryUser);
-    let users = [];
-    querySnapshot.forEach((docs) => users.push(docs.data()));
-    const currentUser = users[0];
-    return currentUser;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const querySnapshot = await getDocs(queryUser);
+        let users = [];
+        querySnapshot.forEach((docs) => users.push(docs.data()));
+        const currentUser = users[0];
+        return currentUser;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 const getAllUsers = async () => {
@@ -103,6 +102,8 @@ export const addSwap = async (condition, { volumeInfo }, authorisedUserId) => {
     const isbn = volumeInfo.industryIdentifiers.filter((item) => {
         return item.type === "ISBN_10";
     });
+
+    console.log(isbn[0].identifier);
     try {
         const refDoc = await addDoc(collection(firestore, "swaps"), {
             condition,
@@ -135,29 +136,35 @@ export const updateUser = async (
 };
 
 export const getBooks = async (searchText) => {
-  const booksRef = collection(firestore, "books");
-  const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
+    const booksRef = collection(firestore, "books");
+    const queryBooks = query(booksRef, orderBy("dateAdded", "desc"));
 
-  try {
-    const querySnapshot = await getDocs(queryBooks);
-    let books = [];
-    querySnapshot.forEach((docs) => books.push(docs.data()));
+    try {
+        const querySnapshot = await getDocs(queryBooks);
+        let books = [];
+        querySnapshot.forEach((docs) => books.push(docs.data()));
 
-    if (searchText) {
-      const filteredBooks = books.filter((book) => {
-        return (
-          book.title.toLowerCase().includes(searchText.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchText.toLowerCase()) ||
-          book.category.toLowerCase().includes(searchText.toLowerCase())
-        );
-      });
-      return filteredBooks;
+        if (searchText) {
+            const filteredBooks = books.filter((book) => {
+                return (
+                    book.title
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase()) ||
+                    book.author
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase()) ||
+                    book.category
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase())
+                );
+            });
+            return filteredBooks;
+        }
+
+        return books;
+    } catch (err) {
+        console.log(err);
     }
-
-    return books;
-  } catch (err) {
-    console.log(err);
-  }
 };
 
 export const getSwapsByIsbn = async (isbn) => {
@@ -191,16 +198,16 @@ export const getBookByIsbn = async (isbn) => {
 };
 
 export const updateSwapById = async (swapId, requestedUid, status) => {
-  const swapRef = doc(firestore, "swaps", swapId);
-  let updateObj = {};
-  requestedUid ? (updateObj.requestedBy = requestedUid) : null;
-  status ? (updateObj.status = status) : null;
-  updateDoc(swapRef, updateObj);
+    const swapRef = doc(firestore, "swaps", swapId);
+    let updateObj = {};
+    requestedUid ? (updateObj.requestedBy = requestedUid) : null;
+    status ? (updateObj.status = status) : null;
+    updateDoc(swapRef, updateObj);
 };
 
-export const deleteSwapById = async(swapId) =>{
-  await deleteDoc(doc(firestore, "swaps", swapId))
-}
+export const deleteSwapById = async (swapId) => {
+    await deleteDoc(doc(firestore, "swaps", swapId));
+};
 
 export const getOffersByUserID = async (uid) => {
     const swapsRef = collection(firestore, "swaps");
@@ -233,44 +240,42 @@ export const getRequestsByUserID = async (uid) => {
 };
 
 export const getMessages = async (swapId) => {
-  const messagesRef = collection(firestore, "chats");
-  const queryMessages = query(
-    messagesRef,
-    where("swapId", "==", swapId),
-    orderBy("createdAt", "desc")
-  );
-  try {
-    const querySnapshot = await getDocs(queryMessages);
-    let messages = [];
-    querySnapshot.forEach((docs) => messages.push(docs.data()));
-    return messages;
-  } catch (err) {
-    console.log(err);
-  }
+    const messagesRef = collection(firestore, "chats");
+    const queryMessages = query(
+        messagesRef,
+        where("swapId", "==", swapId),
+        orderBy("createdAt", "desc")
+    );
+    try {
+        const querySnapshot = await getDocs(queryMessages);
+        let messages = [];
+        querySnapshot.forEach((docs) => messages.push(docs.data()));
+        return messages;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export const addMessage = async (swapId, currentUser, text) => {
-  try {
-    await addDoc(
-      collection(firestore, "chats"),
-      {
-        _id: swapId + (Math.random() + 1).toString(36).substring(7),
-        swapId,
-        text,
-        createdAt: new Date().getTime(),
-        user: {
-          _id: currentUser.uid,
-          avatar: currentUser.selectedImage,
-          name: currentUser.username,
-        },
-      },
-      { merge: true }
-    );
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        await addDoc(
+            collection(firestore, "chats"),
+            {
+                _id: swapId + (Math.random() + 1).toString(36).substring(7),
+                swapId,
+                text,
+                createdAt: new Date().getTime(),
+                user: {
+                    _id: currentUser.uid,
+                    avatar: currentUser.selectedImage,
+                    name: currentUser.username,
+                },
+            },
+            { merge: true }
+        );
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-export const updateSwapCountByIsbn = async (isbn) =>{
-  
-}
+export const updateSwapCountByIsbn = async (isbn) => {};
