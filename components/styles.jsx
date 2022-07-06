@@ -74,7 +74,6 @@ export default StyleSheet.create({
         height: 300,
     },
     profileImage: {
-        height: 300,
         width: "100%",
     },
     profileImageSmall: {
