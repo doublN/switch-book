@@ -4,7 +4,7 @@ import UserContext from "../Contexts/UserContext";
 import { LogoutButton } from "./LogoutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { Exo_100Thin, Rowdies_700Bold } from "@expo-google-fonts/dev";
+import styles from "./styles"
 
 const Profile = ({ navigation }) => {
     const { currentUser, auth } = useContext(UserContext);
@@ -12,15 +12,15 @@ const Profile = ({ navigation }) => {
     return (
         <View>
             <Image
-                style={styles.imageFp}
+                style={styles.profileImage}
                 resizeMode="stretch"
                 source={{ uri: currentUser.selectedImage }}
             />
             <View>
-                <Text style={styles.body}>
+                <Text style={styles.bodyProfile}>
                     Welcome, {currentUser.username}!
                 </Text>
-                <Text style={styles.body}>
+                <Text style={styles.bodyProfile}>
                     <FontAwesomeIcon icon={faLocationDot} />
                     {currentUser.location}
                 </Text>
@@ -30,16 +30,18 @@ const Profile = ({ navigation }) => {
                 <Pressable
                     style={styles.button}
                     onPress={() => navigation.navigate("Create Profile")}
+
                 >
                     <Text styles={styles.text}>Edit your profile</Text>
                 </Pressable>
             </View>
-            <View style={styles.container}>
+            <View style={styles.containerProfile}>
                 <Pressable
                     style={styles.button}
                     onPress={() => navigation.navigate("Offer a Book")}
+
                 >
-                    <Text styles={styles.text}>Offer a book</Text>
+                    <Text styles={styles.buttonProfile}>Offer a book</Text>
                 </Pressable>
                 <Pressable
                     style={styles.button}
@@ -55,40 +57,4 @@ const Profile = ({ navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-    profileImage: {
-        width: "100%",
-        height: 350,
-    },
-    body: {
-        fontFamily: "Avenir",
-        fontSize: 15,
-        padding: 5,
-        justifyContent: "center",
-        textAlign: "center",
-        color: "#333333",
-    },
-    button: {
-        alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 22,
-        margin: 10,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: "#dddddd",
-    },
-    imageFp: {
-        marginTop: 20,
-        marginBottom: "auto",
-        marginLeft: "auto",
-        marginRight: "auto",
-        borderRadius: 18000,
-        width: 300,
-        height: 300,
-    },
-});
 export default Profile;
