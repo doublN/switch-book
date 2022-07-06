@@ -2,11 +2,13 @@ import { View, Text, FlatList, Image, StyleSheet, Pressable, Button } from 'reac
 import React, { useEffect, useContext, useLayoutEffect, useState } from 'react'
 import UserContext from '../Contexts/UserContext'
 import { getOffersByUserID, getBookByIsbn, deleteSwapById, updateSwapById } from '../Utils/dbQueries';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function OffersScreen({navigation}) {
-    const {currentUser, shouldUpdateOffers, setShouldUpdateOffers} = useContext(UserContext);
+    const {currentUser} = useContext(UserContext);
     const [offeredBooks, setOfferedBooks] = useState([]);
-    console.log(shouldUpdateOffers);
+    const [shouldUpdateOffers, setShouldUpdateOffers] = useState(false);
+    const isFocused = useIsFocused();
 
     useLayoutEffect(() => {
         setShouldUpdateOffers(false);
@@ -20,7 +22,7 @@ export default function OffersScreen({navigation}) {
             setOfferedBooks(offered);
         }
         getUserOffers();
-    }, [shouldUpdateOffers])
+    }, [shouldUpdateOffers, isFocused])
 
     async function handleRemoveOffer(swapId){
         await deleteSwapById(swapId);
