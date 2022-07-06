@@ -6,7 +6,6 @@ import {
     FlatList,
     ScrollView,
     Alert,
-    StyleSheet,
     TouchableOpacity,
     Pressable,
 } from "react-native";
@@ -17,6 +16,10 @@ import {
     updateSwapById,
 } from "../Utils/dbQueries";
 import UserContext from "../Contexts/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import styles from "./styles"
+
 
 export default function SingleBookScreen({ route, navigation }) {
     const { book } = route.params;
@@ -69,7 +72,8 @@ export default function SingleBookScreen({ route, navigation }) {
     }
 
     return (
-        <View>
+        <View >
+            <TouchableOpacity onPress={() => navigation.goBack()}><FontAwesomeIcon icon={faArrowLeft}/></TouchableOpacity>
             <FlatList
                 ListHeaderComponent={
                     <>
@@ -94,6 +98,7 @@ export default function SingleBookScreen({ route, navigation }) {
                                 <Text>Offer this book</Text>
                             </Pressable>
                         </View>
+
                     </>
                 }
                 data={offerInfo}
@@ -101,31 +106,19 @@ export default function SingleBookScreen({ route, navigation }) {
                     <ScrollView style={styles.ScrollView}>
                         <TouchableOpacity
                             onPress={() =>
-                                navigation.navigate("OtherUserScreen", {
+                                navigation.navigate("Other User Screen", {
                                     user: item.offeredBy,
                                 })
                             }
                         >
                             <Image
-                                style={{
-                                    resizeMode: "contain",
-                                    height: 100,
-                                    width: 100,
-                                    borderRadius: 100,
-                                }}
+                                style={styles.image}
                                 source={{ uri: item.selectedImage }}
                             />
                         </TouchableOpacity>
-                        <View style={{ flexDirection: "row" }}>
+                        <View >
                             <Text style={styles.body}>Offered by: </Text>
-                            <Text
-                                style={styles.body}
-                                onPress={() =>
-                                    navigation.navigate("OtherUserScreen", {
-                                        user: item.offeredBy,
-                                    })
-                                }
-                            >
+                            <Text style={styles.body} onPress={() => navigation.navigate("OtherUserScreen", { user: item.offeredBy})}>
                                 {item.username}
                             </Text>
                         </View>
@@ -139,6 +132,7 @@ export default function SingleBookScreen({ route, navigation }) {
                                 handleRequest(item.swapId);
                             }}
                         />
+                        <Button title="Offer this book" onPress={()=>{navigation.navigate("AddABook", {isbn : book.isbn})}}></Button>
                     </ScrollView>
                 )}
             />
@@ -146,59 +140,5 @@ export default function SingleBookScreen({ route, navigation }) {
     );
 }
 
-const styles = StyleSheet.create({
-    ScrollView: { padding: 30 },
-    list: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 50,
-        borderRadius: 30,
-        padding: 20,
-        margin: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "#423034",
-        backgroundColor: "#eeeeee",
-        borderRadius: 30,
-    },
-    body: {
-        fontFamily: "Avenir",
-        fontSize: 15,
-        textAlign: "center",
-        color: "#333333",
-    },
-    desc: {
-        fontFamily: "Avenir",
-        fontSize: 15,
-        textAlign: "center",
-        color: "#333333",
-        padding:30,
-        paddingBottom: 10,
-        textAlign:'justify',
-    },
-    title:{
-        fontFamily:"Avenir",
-        fontWeight: 'bold',
-        fontSize: 19,
-        textAlign: "center",
-        color: "#333333",
-        paddingTop: 20,
-          },
-    image:{
-        resizeMode: "contain",
-        height: 300,
-        width: 200,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10,
-        },
-    button: {
-        alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 22,
-        margin: 10,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: "#dddddd",
-    },
-});
+
+

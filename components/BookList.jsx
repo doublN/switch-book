@@ -23,7 +23,9 @@ const BookList = ({ books, navigation }) => {
             >
               <View style={styles.list}>
             <Image
-              style={styles.image}
+
+            style={styles.image}
+
               source={{ uri: item.coverImageUri }}
               />
             <Text style={styles.title}>
@@ -74,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
+    marginBottom: 20,
   },
   body:{
     fontFamily:"Avenir",
